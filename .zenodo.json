@@ -1,0 +1,38 @@
+{
+  "creators": [
+    {
+      "affiliation": "Earth Lab, University of Colorado - Boulder",
+      "name": "Wasser, Leah",
+      "orcid": "0000-0002-8177-6550"
+    },
+    {
+      "affiliation": "Earth Lab, University of Colorado - Boulder",
+      "name": "Korinek, Nathan",
+      "orcid": "0000-0003-4879-9299"
+    },
+    {
+      "affiliation": "Earth Lab, University of Colorado - Boulder",
+      "name": "Palomino, Jenny",
+      "orcid": "0000-0003-4879-9299"
+    }
+  ],
+  "contributors": [
+    {
+      "type":"Other",
+      "affiliation": "DigitalGlobe",
+      "name": "Morrissey, Martha",
+      "orcid": "0000-0002-5406-171X"
+    },
+    {
+      "affiliation": "Berkeley Institute for Data Science, UC Berkeley",
+      "name": "Holdgraf, Chris",
+      "orcid": "0000-0002-2391-0678"
+    }
+  ],
+  "keywords": [
+    "data science",
+    "earth data science",
+    "earth analytics"
+  ],
+  "license": "CC-BY-NC-ND-4.0"
+}

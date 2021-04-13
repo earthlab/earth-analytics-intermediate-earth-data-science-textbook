@@ -1,0 +1,4888 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+
+
+<meta charset="utf-8">
+
+
+
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>Why A Hundred Year Flood Can Occur Every Year. Calculate Exceedance Probability and Return Periods in Python | Earth Data Science - Earth Lab </title>
+
+
+
+
+
+
+
+<meta property="og:locale" content="en-US">
+<meta property="og:site_name" content="Earth Data Science - Earth Lab">
+<meta property="og:title" content="Why A Hundred Year Flood Can Occur Every Year. Calculate Exceedance Probability and Return Periods in Python">
+
+
+  <link rel="canonical" href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/floods-return-period-and-probability/">
+  <meta property="og:url" content="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/floods-return-period-and-probability/">
+
+
+
+  <meta content="Learn how to calculate exceedance probability and return periods associated with a flood in Python." name="description">
+  <meta property="og:description" content="Learn how to calculate exceedance probability and return periods associated with a flood in Python.">
+
+
+<!-- twitter cards -->
+
+  <meta name="twitter:site" content="@earthlabcu">
+  <meta name="twitter:title" content="Why A Hundred Year Flood Can Occur Every Year. Calculate Exceedance Probability and Return Periods in Python">
+  <meta name="twitter:description" content="Learn how to calculate exceedance probability and return periods associated with a flood in Python.">
+  <meta name="twitter:url" content="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/floods-return-period-and-probability/">
+
+  
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:image" content="https://earthdatascience.org/images/earth_sm_twit.png">
+    <meta name="twitter:image:alt" content="The Earthlab Logo - image of a globe with courses, lessons and tutorials">
+
+    
+  
+
+  
+
+
+
+  
+
+  
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2019-11-19T00:00:00-07:00">
+  
+    <link rel="next" href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/precipitation-discharge-mass-balance/" title="The Relationship Between Precipitation and Stream Discharge | Explore Mass Balance">
+  
+  
+    <link rel="prev" href="http://localhost:4000/courses/intro-to-earth-data-science/write-efficient-python-code/functions-modular-code/write-functions-with-multiple-and-optional-parameters-in-python/" title="Write Functions with Multiple Parameters in Python">
+  
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "Earth Analytics",
+      "url" : "http://localhost:4000",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Earth Data Science - Earth Lab Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-site-verification" content="LfpevjsE0wlELv5KKOZv1T2RhRimGSiRckWv5ZC19GU" />
+<!-- don't use the old cataloged meta tags -->
+<meta name="googlebot" content="noodp">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+
+<!-- For all browsers
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">-->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
+
+    <script src="http://localhost:4000/assets/js/copy-code.js"></script>
+  </head>
+
+  <body>
+
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    
+
+<!-- search bar begin  - turning off for now-->
+
+<div class="search">
+<form role="search" method="get" action="http://localhost:4000/search/">
+    <input id="q" name="q"
+           placeholder="Search earth data science site" type="text">
+</form>
+<!--<span class='cu-boulder'><a href="http://www.colorado.edu/earthlab" target="_blank">Earth Lab University of Colorado - Boulder Home </a></span> -->
+</div>
+
+
+<!-- search bar END -->
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <button><div class="navicon"></div></button>
+        <ul class="visible-links">
+          <li class="masthead__menu-item masthead__menu-item--lg"><a href="http://localhost:4000/"><img src="/images/earth-lab-logo.png" alt="Earth Lab - Earth Data Science" style="height:80%;width:85%"></a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/tutorials/">Tutorials</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/courses/">Courses</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/workshops/">Workshops</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/tools/">Tools</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/blog/">Blog</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/about/">About</a></li>
+          
+
+        </ul>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    
+
+
+
+  <div class="page__hero--overlay" style=" background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('http://localhost:4000/images/header-images/earth-data-analytics-professional-certificate-banner.jpg');">
+  <div class="wrapper">
+        <h1 class="page__title" itemprop="headline">
+          Earth Data Analytics Online Certificate
+        </h1>
+        <p><a href="http://bit.ly/2jc5SXy" target = "_blank" class="btn btn--light-outline btn--large">Enroll now! Learn more.</a></p>
+  </div>
+</div>
+
+
+
+
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="breadcrumbs" role="menubar" aria-label="breadcrumbs">
+ <ol itemscope itemtype="http://schema.org/BreadcrumbList">
+ <a href="http://localhost:4000"></a>
+ 
+ 
+ <!-- there is an offset of 1 so subtract 2 from the final crumb number-->
+ 
+   
+   
+     <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+       <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+       <meta itemprop="position" content="1" />
+     </li>
+     <span class="sep">/</span>
+   
+    
+        
+        <li><a href="http://localhost:4000/courses/">Courses </a>
+        <meta itemprop="position" content="2" />
+        <span class="sep">/</span></li>
+    
+  
+   
+    
+        
+        <li><a href="http://localhost:4000/courses/use-data-open-source-python/">Use data open source python </a>
+        <meta itemprop="position" content="3" />
+        <span class="sep">/</span></li>
+    
+  
+   
+    
+        
+        <li><a href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/">Use time series data in python </a>
+        <meta itemprop="position" content="4" />
+        <span class="sep">/</span></li>
+    
+  
+   
+    
+        <li class="current">Why A Hundred Year Flood Can Occur Every Year. Calculate Exceedance Probability and Return Periods in Python</li>
+    
+  
+</ol>
+</nav>
+
+<!-- from min mistakes -->
+
+
+
+
+  
+
+
+<div id="main" role="main">
+  
+
+
+
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+    
+    
+
+
+    
+
+    
+     <!--  Might be able to delete this This is the code that populates the side bar navigation if there is a class-->
+      
+
+
+
+
+
+
+
+<!-- make sure we're only grabbing pages for the course -->
+
+
+
+<!--<h3>Week 1 Lessons</h3>-->
+<!-- i don't think the code below is used as modules is defined lower down as well. -->
+
+<!-- This is how modules are sorted on the left hand side bar -->
+
+
+
+
+
+
+<h5><a href="http://localhost:4000/courses/intermediate-earth-data-science-textbook/" ><i class="fa fa-home" aria-hidden="true"></i> Intermediate earth data science textbook</a></h5>
+
+<!-- Just get the pages from this course -->
+
+
+
+
+
+
+<nav class="nav__list">
+
+
+
+
+
+
+
+<ul>
+  <li><span class="nav__sub-title"><i class="fa fa-book" aria-hidden="true"></i> Units</span>
+   <ul>
+
+       
+
+        
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+                
+                    <li class='active-section'> <a href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/"><i class="fa fa-folder-open" aria-hidden="true"></i>
+                     1. TIME SERIES DATA IN PYTHON</a></li>
+
+            
+
+<div class='active-menu'>
+      <ul>
+        
+        <!-- Note that class-order allows you to sort modules by class order if there are more than 1 in a class -->
+        
+
+        
+
+        
+
+        
+        
+        <!-- If it's a textbook with a chapter number write "chapter", else assume it is a week -->
+
+          <li><span class="nav__sub-title grey"><i class="fa fa-caret-down" aria-hidden="true"></i>   Chapter 1 Time series data in pandas  </span></li>
+        <ul>
+
+      
+      <!-- count lessons -->
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/introduction-to-time-series-in-pandas-python/><!--1.1 --> - Intro to Timeseries</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/date-time-types-in-pandas-python/><!--1.2 --> - Dates in Python</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/date-time-types-in-pandas-python/subset-time-series-data-python/><!--1.3 --> - Subset Time Series Data in Python</a></li>
+          
+          
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/date-time-types-in-pandas-python/resample-time-series-data-pandas-python/><!--1.4 --> - Resample Time Series Data</a></li>
+          
+          
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/date-time-types-in-pandas-python/customize-dates-matplotlib-plots-python/><!--1.5 --> - Custom Date Formats for Plots</a></li>
+          
+          
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/date-time-types-in-pandas-python/time-series-exercise/><!--1.6 --> - Time Series Challenges</a></li>
+          
+          
+
+        
+       </ul>
+        
+
+        
+        
+        <!-- If it's a textbook with a chapter number write "chapter", else assume it is a week -->
+
+          <li><span class="nav__sub-title grey"><i class="fa fa-caret-down" aria-hidden="true"></i>   Chapter 1.5 Flood returns period analysis in python  </span></li>
+        <ul>
+
+      
+      <!-- count lessons -->
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/floods-return-period-and-probability/ class='active'> <!--1.1 -->- Flood Return Period</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/precipitation-discharge-mass-balance/><!--1.2 --> - Cumulative Sums in Pandas</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+       </ul>
+        
+
+        
+      </ul>
+
+      <!-- BEGIN Learn how to lessons -->
+       <ul>
+         
+         
+       </ul>
+
+
+     </div>
+
+
+      <!-- END BEGIN Learn how to lessons -->
+
+      <!--  -->
+      
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 2 <a href="http://localhost:4000/courses/use-data-open-source-python/intro-vector-data-python/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 INTRO TO SPATIAL VECTOR DATA IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-vector-data-python/spatial-data-vector-shapefiles/"> Chapter 2:   Spatial Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-vector-data-python/vector-data-processing/"> Chapter 3:   Processing Spatial Vector Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 3 <a href="http://localhost:4000/courses/use-data-open-source-python/intro-raster-data-python/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 INTRODUCTION TO RASTER DATA IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-raster-data-python/fundamentals-raster-data/"> Chapter 4:   Intro to Raster Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-raster-data-python/raster-data-processing/"> Chapter 5:   Processing Raster Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 4 <a href="http://localhost:4000/courses/use-data-open-source-python/spatial-data-applications/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 SPATIAL DATA APPLICATIONS IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/spatial-data-applications/lidar-remote-sensing-uncertainty/"> Chapter 6:   Uncertainty in Remote Sensing Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 5 <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 MULTISPECTRAL REMOTE SENSING DATA IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/intro-multispectral-data/"> Chapter 7:   Intro to Multispectral Remote Sensing Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/intro-naip/"> Chapter 8:   NAIP </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/"> Chapter 9:   Landsat Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/modis-data-in-python/"> Chapter 10:   MODIS Data </a>
+                                </li>
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/vegetation-indices-in-python/"> Chapter 11:   Calculate Vegetation Indices in Python </a>
+                                </li>
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 6 <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 INTRODUCTION TO HIERARCHICAL DATA FORMATS IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/intro-to-hdf4/"> Chapter 12:   HDF4 </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/intro-to-climate-data/"> Chapter 13:   NETCDF </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 7 <a href="http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 INTRODUCTION TO API DATA ACCESS IN OPEN SOURCE PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/apis-in-python/"> Chapter 15:   APIs </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/social-media-text-mining-python/"> Chapter 16:   Twitter Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 8 <a href="http://localhost:4000/courses/use-data-open-source-python/earth-data-science-workflows/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 EARTH DATA SCIENCE WORKFLOWS</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/earth-data-science-workflows/design-efficient-automated-data-workflows/"> Chapter 12:   Design and Automate Data Workflows </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 9 <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 DATA STORIES</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/colorado-floods-2013/"> Chapter 20:   Flood overview  </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/what-is-lidar-data/"> Chapter 21:   Intro to Lidar Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/cold-springs-wildfire/"> Chapter 22:   Wildfire Overview </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+  </ul></li>
+ </ul>
+
+
+ <ul>
+   <li><span class="nav__sub-title"><i class="fa fa-folder-open" aria-hidden="true"></i> Overview</span>
+    <ul>
+     
+          
+         <li> <a href="http://localhost:4000/courses/use-data-open-source-python/">
+           Use Data for Earth and Environmental Science in Open Source Python Home </a></li>
+         
+
+     
+   </ul>
+ </li>
+</ul>
+</nav>
+
+<h5><a href="http://localhost:4000/courses/intermediate-earth-data-science-textbook/" ><i class="fa fa-home" aria-hidden="true"></i> intermediate-earth-data-science-textbook Home</a></h5>
+
+    
+
+    
+
+  
+  </div>
+
+
+
+
+
+
+<!-- begin science / science themes side bar nav -->
+
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+
+    <meta itemprop="headline" content="Why A Hundred Year Flood Can Occur Every Year. Calculate Exceedance Probability and Return Periods in Python">
+    <meta itemprop="description" content="Learn how to calculate exceedance probability and return periods associated with a flood in Python.">
+    <meta itemprop="datePublished" content="November 19, 2019">
+    <meta itemprop="dateModified" content="September 11, 2020">
+
+    <div class="page__inner-wrap">
+        <header>
+          
+
+          <!-- BEGIN: insert a welcome to the module block on pages that are part of a module set -->
+
+          <!-- END: insert welcome block -->
+
+          
+              
+
+            
+                <h1 class="page__title" itemprop="headline">
+                Lesson 1. 
+                 Why A Hundred Year Flood Can Occur Every Year. Calculate Exceedance Probability and Return Periods in Python
+
+                
+                </h1>
+            
+
+          
+
+          
+            <div class="page__meta">
+              
+              
+              <a href="http://localhost:4000/authors/matthew-rossi">Matthew Rossi</a>, 
+              
+              
+              <a href="http://localhost:4000/authors/leah-wasser">Leah Wasser</a>
+              
+            </div>
+          
+
+            <br/>
+
+            
+            <div class="notice--warning header" markdown="1">
+            
+              
+                  <h1> <i class="fa fa-6 fa-book" aria-hidden="true"></i> Calculate Flood Return Periods and Exceedance Probability in Python With Pandas - Intermediate earth data science textbook course module</h1>
+                  Welcome to the first lesson in the <strong>Calculate Flood Return Periods and Exceedance Probability in Python With Pandas</strong> module.
+                  Python provides a datetime object for storing and working with dates. Learn how to handle date fields using pandas to work with time series data in Python.
+               
+            
+            </div>
+            
+
+              
+            
+
+            <!-- For tools pages add authors and tool title -->
+
+            
+        </header>
+
+
+
+      <section class="page__content" itemprop="text">
+
+        <!-- would like to include the TOC automatically but this does weird things-->
+        
+          
+            <aside class="sidebar__right">
+<nav class="toc">
+    <header><h4 class="nav__title"><i class="fa fa-file-text"></i> On This Page</h4></header>
+<ul class="toc__menu" id="markdown-toc">
+  <li><a href="#chapter-15---flood-return-and-exceedance-probability-calculations-in-python---earth-data-science-applications" id="markdown-toc-chapter-15---flood-return-and-exceedance-probability-calculations-in-python---earth-data-science-applications"><i class="fa fa-ship" aria-hidden="true"></i> Chapter 1.5 - Flood Return and Exceedance Probability Calculations In Python - Earth Data Science Applications</a></li>
+  <li><a href="#learning-objectives" id="markdown-toc-learning-objectives"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Learning Objectives</a></li>
+  <li><a href="#introduction-to-flood-frequency-analysis" id="markdown-toc-introduction-to-flood-frequency-analysis">Introduction to Flood Frequency Analysis</a></li>
+  <li><a href="#what-is-a-recurrence-interval" id="markdown-toc-what-is-a-recurrence-interval">What is a Recurrence Interval?</a></li>
+  <li><a href="#how-can-we-have-two-100-year-floods-in-less-than-two-years" id="markdown-toc-how-can-we-have-two-100-year-floods-in-less-than-two-years">How Can We Have two “100-year floods” in less than two years?</a></li>
+  <li><a href="#what-is-an-annual-exceedance-probability" id="markdown-toc-what-is-an-annual-exceedance-probability">What is an Annual Exceedance Probability?</a></li>
+  <li><a href="#calculate-probability-in-python" id="markdown-toc-calculate-probability-in-python">Calculate Probability in Python</a></li>
+  <li><a href="#find-a-station-of-interest" id="markdown-toc-find-a-station-of-interest">Find A Station of Interest</a></li>
+  <li><a href="#download-stream-gage-data" id="markdown-toc-download-stream-gage-data">Download Stream Gage Data</a></li>
+  <li><a href="#station-selection" id="markdown-toc-station-selection">Station Selection</a></li>
+  <li><a href="#plot-your-data" id="markdown-toc-plot-your-data">Plot Your Data</a></li>
+  <li><a href="#annual-maxima" id="markdown-toc-annual-maxima">Annual Maxima</a></li>
+  <li><a href="#optional---difference-bar-plot" id="markdown-toc-optional---difference-bar-plot">Optional - Difference Bar Plot</a></li>
+  <li><a href="#calculate-return-period" id="markdown-toc-calculate-return-period">Calculate Return Period</a></li>
+  <li><a href="#plot-stream-discharge-return-period" id="markdown-toc-plot-stream-discharge-return-period">Plot Stream Discharge Return Period</a></li>
+</ul>
+
+  </nav>
+</aside>
+
+<div class="notice--success">
+
+  <h2 id="chapter-15---flood-return-and-exceedance-probability-calculations-in-python---earth-data-science-applications"><i class="fa fa-ship" aria-hidden="true"></i> Chapter 1.5 - Flood Return and Exceedance Probability Calculations In Python - Earth Data Science Applications</h2>
+
+  <p>In this chapter, you will learn how to calculate flood return periods
+and exceedance probability using <strong>Python</strong>.</p>
+
+  <h2 id="learning-objectives"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Learning Objectives</h2>
+
+  <ul>
+    <li>Calculate exceedance probability and return periods associated with a flood in <strong>Python</strong>.</li>
+  </ul>
+
+</div>
+
+<h2 id="introduction-to-flood-frequency-analysis">Introduction to Flood Frequency Analysis</h2>
+
+<p>One way to analyze time series data - particularly related to events like floods - is to calculate the frequency of different magnitude events. You have have likey heard the term <strong>“100-year flood”</strong>. While you may think it means that it is the size of flood that occurs every 100 years, it actually refers to the flood magnitude that has a probability of exceedance of 1/100 in any given year (i.e., a 1% chance). This is why the hundred year flood event can occur two years in a row.</p>
+
+<p>In this lesson you will learn how “100-year floods” (and other flood frequencies) are calculated using some basic statistics. To begin, let’s define two terms:</p>
+
+<ol>
+  <li>
+    <p><strong>Exceedance probability:</strong> the probability of a given magnitude event or greater to occur.</p>
+  </li>
+  <li>
+    <p><strong>Recurrence interval:</strong> the average time of exceedance is the inverse of the exceedance probability.</p>
+  </li>
+</ol>
+
+<h3 id="important-considerations">Important Considerations</h3>
+
+<ul>
+  <li>The above definitions assume that flood events in the time series are independent (i.e., that event magnitudes are not correlated with each other in time) and that the process is stationary (i.e., that the probability distribution of events is not changing through time).</li>
+</ul>
+
+<blockquote>
+  <p>In this project, we will be interpreting maximum annual floods. How valid do you think the above assumptions are for annual maxima?</p>
+</blockquote>
+
+<ul>
+  <li>Even though the phrase “recurrence interval” evokes the idea of regularity in the time between events, this is an important misconception (recall our assumption of independence). The 100-year flood is just as likely to occur after a year that already experienced a 100-yr flood as any other year.</li>
+</ul>
+
+<blockquote>
+  <p>In this project, we will be asking you to construct and interpret plots of recurrence intervals. Do you think the processes that drive floods are periodic? If so, over what timescales?</p>
+</blockquote>
+
+<p>The content below comes from <a href="https://water.usgs.gov/edu/100yearflood.html" target="_blank">this USGS waterscience page</a>. It provides an excellent overview of recurrence intervals and return periods.</p>
+
+<hr />
+
+<h2 id="what-is-a-recurrence-interval">What is a Recurrence Interval?</h2>
+
+<blockquote>
+  <p><em>100-year floods can happen 2 years in a row</em></p>
+</blockquote>
+
+<p>Statistical techniques, through a process called frequency analysis, are used to estimate the probability of the occurrence of a given precipitation event. The recurrence interval is based on the probability that the given event will be equalled or exceeded in any given year. For example, assume there is a 1 in 50 chance that 6.60 inches of rain will fall in a certain area in a 24-hour period during any given year. Thus, a rainfall total of 6.60 inches in a consecutive 24-hour period is said to have a 50-year recurrence interval. Likewise, using a frequency analysis (Interagency Advisory Committee on Water Data, 1982) there is a 1 in 100 chance that a streamflow of 15,000 cubic feet per second (ft3/s) will occur during any year at a certain streamflow-measurement site. Thus, a peak flow of 15,000 ft3/s at the site is said to have a 100-year recurrence interval. Rainfall recurrence intervals are based on both the magnitude and the duration of a rainfall event, whereas streamflow recurrence intervals are based solely on the magnitude of the annual peak flow.</p>
+
+<p>Ten or more years of data are required to perform a frequency analysis for the determination of recurrence intervals. Of course, the more years of historical data the better—a hydrologist will have more confidence on an analysis of a river with 30 years of record than one based on 10 years of record.</p>
+
+<p>Recurrence intervals for the annual peak streamflow at a given location change if there are significant changes in the flow patterns at that location, possibly caused by an impoundment or diversion of flow. The effects of development (conversion of land from forested or agricultural uses to commercial, residential, or industrial uses) on peak flows is generally much greater for low-recurrence interval floods than for high-recurrence interval floods, such as 25- 50- or 100-year floods. During these larger floods, the soil is saturated and does not have the capacity to absorb additional rainfall. Under these conditions, essentially all of the rain that falls, whether on paved surfaces or on saturated soil, runs off and becomes streamflow.</p>
+
+<h2 id="how-can-we-have-two-100-year-floods-in-less-than-two-years">How Can We Have two “100-year floods” in less than two years?</h2>
+
+<p>This question points out the importance of proper terminology. The term “100-year flood” is used in an attempt to simplify the definition of a flood that statistically has a 1-percent chance of occurring in any given year. Likewise, the term “100-year storm” is used to define a rainfall event that statistically has this same 1-percent chance of occurring. In other words, over the course of 1 million years, these events would be expected to occur 10,000 times. But, just because it rained 10 inches in one day last year doesn’t mean it can’t rain 10 inches in one day again this year.</p>
+
+<h3 id="recurrence-intervals-and-probabilities-of-occurrences">Recurrence intervals and probabilities of occurrences</h3>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Recurrance interval, in years</td>
+      <td>Probability of occurrence in any given year</td>
+      <td>Percent chance of occurrence in any given year</td>
+    </tr>
+    <tr>
+      <td>100</td>
+      <td>1 in 100</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>50</td>
+      <td>1 in 50</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>1 in 25</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>1 in 10</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>1 in 5</td>
+      <td>20</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>2</td>
+      <td>1 in 2</td>
+      <td>50</td>
+    </tr>
+  </tfoot>
+</table>
+
+<h2 id="what-is-an-annual-exceedance-probability">What is an Annual Exceedance Probability?</h2>
+
+<p>The USGS and other agencies often refer to the percent chance of occurrence as an Annual Exceedance Probability or AEP. An AEP is always a fraction of one. So a 0.2 AEP flood has a 20% chance of occurring in any given year, and this corresponds to a 5-year recurrence-interval flood. Recurrence-interval terminology tends to be more understandable for flood intensity comparisons. However, AEP terminology reminds the observer that a rare flood does not reduce the chances of another rare flood within a short time period.</p>
+
+<hr />
+<h2 id="calculate-probability-in-python">Calculate Probability in Python</h2>
+<p>In this lesson, you will use streamflow data to explore the probabilities of a different magnitude events (e.g., discharge is measured in cubic feet per second). To do this, you will want long historic records to make your statistical inferences more robust.</p>
+
+<p>You will use the <code class="highlighter-rouge">hydrofunctions</code> python package to access streamflow data via an API from the United States Geological Survey (USGS) National Water Information System (NWIS) website.</p>
+
+<p>To begin, load all of your libraries.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import packages
+</span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">earthpy</span> <span class="k">as</span> <span class="n">et</span>
+<span class="kn">import</span> <span class="nn">hydrofunctions</span> <span class="k">as</span> <span class="n">hf</span>
+
+<span class="c1"># Date time conversion registration
+</span><span class="kn">from</span> <span class="nn">pandas.plotting</span> <span class="kn">import</span> <span class="n">register_matplotlib_converters</span>
+<span class="n">register_matplotlib_converters</span><span class="p">()</span>
+
+<span class="c1"># Get the data &amp; set working director
+</span><span class="n">data</span> <span class="o">=</span> <span class="n">et</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">'colorado-flood'</span><span class="p">)</span>
+<span class="n">os</span><span class="p">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">et</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">HOME</span><span class="p">,</span> <span class="s">'earth-analytics'</span><span class="p">))</span>
+
+<span class="c1"># Prettier plotting with seaborn
+</span><span class="n">sns</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">"whitegrid"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Downloading from https://ndownloader.figshare.com/files/16371473
+Extracted output to /root/earth-analytics/data/colorado-flood/.
+</code></pre></div></div>
+
+<h2 id="find-a-station-of-interest">Find A Station of Interest</h2>
+
+<p>The <code class="highlighter-rouge">hf.draw_map()</code> function allows you to explore the station visually in a particular area. Explore the map below. Notice the gage locations in the Boulder, Colorado area.</p>
+
+<p>For the purposes of this lesson, you will use gage <code class="highlighter-rouge">dv06730500</code> This gage along Boulder Creek survived the 2013 flood event and is one of the longest time series datasets along Boulder Creek.</p>
+
+<p>The map below also allows you to explore hydrographs for several stream gages at once if you click on the buttons at the bottom center of the map.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create map of stations
+</span><span class="n">hf</span><span class="p">.</span><span class="n">draw_map</span><span class="p">()</span>
+</code></pre></div></div>
+
+<iframe src="http://hydrocloud.org/" width="700" height="400"></iframe>
+
+<p>You can get a list of all stations located in Colorado using the <code class="highlighter-rouge">hf.NWIS().get_data()</code> method.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Request data for all stations in Colorado
+</span><span class="n">PR</span> <span class="o">=</span> <span class="n">hf</span><span class="p">.</span><span class="n">NWIS</span><span class="p">(</span><span class="n">stateCd</span><span class="o">=</span><span class="s">'CO'</span><span class="p">).</span><span class="n">get_data</span><span class="p">()</span>
+
+<span class="c1"># List the names for the first 5 sites in Colorado, USA
+</span><span class="n">PR</span><span class="p">.</span><span class="n">siteName</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>['COLORADO CREEK NEAR SPICER, CO.',
+ 'GRIZZLY CREEK NEAR SPICER, CO.',
+ 'BUFFALO CREEK NEAR HEBRON, CO.',
+ 'GRIZZLY CREEK NEAR HEBRON, CO.',
+ 'GRIZZLY CREEK NEAR WALDEN, CO']
+</code></pre></div></div>
+
+<h2 id="download-stream-gage-data">Download Stream Gage Data</h2>
+<p>You are now ready to grab some data from the NWIS API.</p>
+
+<h3 id="mean-daily-vs-instantaneous-stream-flow-data">Mean Daily vs Instantaneous Stream Flow Data</h3>
+
+<p>There are two kinds of streamflow time-series data that the USGS provides online:</p>
+
+<ol>
+  <li><strong>Mean daily streamflow:</strong> Mean daily streamflow is useful because it is a complete time series (except for days when the gage fails) and thus retains all recorded streamflow events over the period of record.</li>
+  <li><strong>Annual maximum instantaneous streamflow:</strong> Instantaneous data is not averaged over the entire day, but instead reflects continuous variations in the flood hydrograph recorded by the stream gage. As such, annual maximum instantaneous streamflow data are useful because they retain the maximum values of discharge recorded in a given year.</li>
+</ol>
+
+<blockquote>
+  <p>How do you think flood frequencies characterized by these two different data types will compare?</p>
+</blockquote>
+
+<p>For this part of the lesson, you will download the mean daily discharge data. The code for this data in <code class="highlighter-rouge">dv</code> when using the <code class="highlighter-rouge">hydrofunctions</code> python package.</p>
+
+<h3 id="get-data-using-hydrofunctions-api-interface-for-python">Get Data Using Hydrofunctions API Interface for Python</h3>
+
+<p>To begin define a start and end date that you’d like to download. Also define the <code class="highlighter-rouge">site ID</code>.
+Use <code class="highlighter-rouge">USGS 06730500</code> as your selected site. This stream gage survived the 2013 flood event in Colorado. It also has a long record of measurement that will be helpful when calculating recurrence intervals and exceedance probability values below.</p>
+
+<h2 id="station-selection">Station Selection</h2>
+<p>In general, to select stream gages for flood frequency analysis you will want to carefully examine the metadata for candidate stations to check for the time period of operation, record completeness, and other comments on gage operation that might impact your interpretation of statistical results (e.g., Is there a dam upstream? When was it built? Other flow diversions? Did the gage malfunction during some events?)</p>
+
+<p>There are two subsets of USGS gages that have been specially identified for hydo-climatic analyses because station records are of high quality, cover a long time period, and human modification of the watershed is minimal (e.g., due to flow regulation or urban development): (1) Hydro-Climatic Data Network - 2009 (Lins, 2012) and (2) Geospatial attributes of gages for evaluating streamflow (Falcone, 2011).</p>
+
+<p>For this project, we followed the lead of scientists assessing the significance of the 2013 Colorado floods using methods similar to the ones introduced in this project (Yochum, 2015). For more context of data availability along rivers draining the Colorado Front Range, check out Table 2 of this regional flood frequency analysis.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Define the site number and start and end dates that you are interested in
+</span><span class="n">site</span> <span class="o">=</span> <span class="s">"06730500"</span>
+<span class="n">start</span> <span class="o">=</span> <span class="s">'1946-05-10'</span>
+<span class="n">end</span> <span class="o">=</span> <span class="s">'2018-08-29'</span>
+
+<span class="c1"># Request data for that site and time period
+</span><span class="n">longmont_resp</span> <span class="o">=</span> <span class="n">hf</span><span class="p">.</span><span class="n">get_nwis</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="s">'dv'</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="view-site-and-metadata-information">View Site and Metadata Information</h3>
+<p>You can explore the metadata for the site using the <code class="highlighter-rouge">get_nwis()</code> function. Below we request the metadata for the site and the “dv” or Daily Value data. Recall from above that dv is the mean daily value. <code class="highlighter-rouge">iv</code> provides the instantaneous values.</p>
+
+<p>You can also visit the <a href="https://waterdata.usgs.gov/nwis/inventory/?site_no=06730500" target="_blank">USGS Site page</a> to learn more about this USGS station.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Request data for the site and time period
+</span><span class="n">longmont_resp</span> <span class="o">=</span> <span class="n">hf</span><span class="p">.</span><span class="n">get_nwis</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="s">'dv'</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+
+<span class="c1"># Convert the response to a json in order to use the extract_nwis_df function
+</span><span class="n">longmont_resp</span> <span class="o">=</span> <span class="n">longmont_resp</span><span class="p">.</span><span class="n">json</span><span class="p">()</span>
+
+<span class="c1"># Get metadata about the data
+</span><span class="n">hf</span><span class="p">.</span><span class="n">get_nwis</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="s">'dv'</span><span class="p">).</span><span class="n">json</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{'name': 'ns1:timeSeriesResponseType',
+ 'declaredType': 'org.cuahsi.waterml.TimeSeriesResponseType',
+ 'scope': 'javax.xml.bind.JAXBElement$GlobalScope',
+ 'value': {'queryInfo': {'queryURL': 'http://waterservices.usgs.gov/nwis/dv/format=json%2C1.1&amp;sites=06730500&amp;parameterCd=00060',
+   'criteria': {'locationParam': '[ALL:06730500]',
+    'variableParam': '[00060]',
+    'parameter': []},
+   'note': [{'value': '[ALL:06730500]', 'title': 'filter:sites'},
+    {'value': '[mode=LATEST, modifiedSince=null]',
+     'title': 'filter:timeRange'},
+    {'value': 'methodIds=[ALL]', 'title': 'filter:methodId'},
+    {'value': '2020-09-11T17:19:33.924Z', 'title': 'requestDT'},
+    {'value': 'f5f59730-f452-11ea-ac6b-6cae8b6642ea', 'title': 'requestId'},
+    {'value': 'Provisional data are subject to revision. Go to http://waterdata.usgs.gov/nwis/help/?provisional for more information.',
+     'title': 'disclaimer'},
+    {'value': 'sdas01', 'title': 'server'}]},
+  'timeSeries': [{'sourceInfo': {'siteName': 'BOULDER CREEK AT MOUTH NEAR LONGMONT, CO',
+     'siteCode': [{'value': '06730500',
+       'network': 'NWIS',
+       'agencyCode': 'USGS'}],
+     'timeZoneInfo': {'defaultTimeZone': {'zoneOffset': '-07:00',
+       'zoneAbbreviation': 'MST'},
+      'daylightSavingsTimeZone': {'zoneOffset': '-06:00',
+       'zoneAbbreviation': 'MDT'},
+      'siteUsesDaylightSavingsTime': True},
+     'geoLocation': {'geogLocation': {'srs': 'EPSG:4326',
+       'latitude': 40.13877778,
+       'longitude': -105.0202222},
+      'localSiteXY': []},
+     'note': [],
+     'siteType': [],
+     'siteProperty': [{'value': 'ST', 'name': 'siteTypeCd'},
+      {'value': '10190005', 'name': 'hucCd'},
+      {'value': '08', 'name': 'stateCd'},
+      {'value': '08123', 'name': 'countyCd'}]},
+    'variable': {'variableCode': [{'value': '00060',
+       'network': 'NWIS',
+       'vocabulary': 'NWIS:UnitValues',
+       'variableID': 45807197,
+       'default': True}],
+     'variableName': 'Streamflow, ft&amp;#179;/s',
+     'variableDescription': 'Discharge, cubic feet per second',
+     'valueType': 'Derived Value',
+     'unit': {'unitCode': 'ft3/s'},
+     'options': {'option': [{'value': 'Mean',
+        'name': 'Statistic',
+        'optionCode': '00003'}]},
+     'note': [],
+     'noDataValue': -999999.0,
+     'variableProperty': [],
+     'oid': '45807197'},
+    'values': [{'value': [{'value': '144',
+        'qualifiers': ['P'],
+        'dateTime': '2020-09-10T00:00:00.000'}],
+      'qualifier': [{'qualifierCode': 'P',
+        'qualifierDescription': 'Provisional data subject to revision.',
+        'qualifierID': 0,
+        'network': 'NWIS',
+        'vocabulary': 'uv_rmk_cd'}],
+      'qualityControlLevel': [],
+      'method': [{'methodDescription': '', 'methodID': 17666}],
+      'source': [],
+      'offset': [],
+      'sample': [],
+      'censorCode': []}],
+    'name': 'USGS:06730500:00060:00003'}]},
+ 'nil': False,
+ 'globalScope': True,
+ 'typeSubstituted': False}
+</code></pre></div></div>
+
+<p>Now, request the data. The data will be returned as a <code class="highlighter-rouge">pandas</code> dataframe.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Get the data in a pandas dataframe format
+</span><span class="n">longmont_discharge</span> <span class="o">=</span> <span class="n">hf</span><span class="p">.</span><span class="n">extract_nwis_df</span><span class="p">(</span><span class="n">longmont_resp</span><span class="p">)</span>
+<span class="n">longmont_discharge</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>USGS:06730500:00060:00003</th>
+      <th>USGS:06730500:00060:00003_qualifiers</th>
+    </tr>
+    <tr>
+      <th>datetime</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1946-05-10</th>
+      <td>16.0</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>1946-05-11</th>
+      <td>19.0</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>1946-05-12</th>
+      <td>9.0</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>1946-05-13</th>
+      <td>3.0</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>1946-05-14</th>
+      <td>7.8</td>
+      <td>A</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p><code class="highlighter-rouge">Hydrofunctions</code> imports your data into a <code class="highlighter-rouge">pandas</code> dataframe with a datetime index. However you may find the column headings to be too long. Below you will rename them to keep the code in this lesson simpler.
+NOTE: if you are working with many different sites, you’d likely want to keep the column names as they are - with the site ID included.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Rename columns
+</span><span class="n">longmont_discharge</span><span class="p">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s">"discharge"</span><span class="p">,</span> <span class="s">"flag"</span><span class="p">]</span>
+
+<span class="c1"># View first 5 rows
+</span><span class="n">longmont_discharge</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>discharge</th>
+      <th>flag</th>
+    </tr>
+    <tr>
+      <th>datetime</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1946-05-10</th>
+      <td>16.0</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>1946-05-11</th>
+      <td>19.0</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>1946-05-12</th>
+      <td>9.0</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>1946-05-13</th>
+      <td>3.0</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>1946-05-14</th>
+      <td>7.8</td>
+      <td>A</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># View last 5 rows of the data
+# Note that the 'P' flag indicates that the data is provisional
+</span><span class="n">longmont_discharge</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>discharge</th>
+      <th>flag</th>
+    </tr>
+    <tr>
+      <th>datetime</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2018-08-25</th>
+      <td>9.86</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>2018-08-26</th>
+      <td>7.02</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>2018-08-27</th>
+      <td>4.05</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>2018-08-28</th>
+      <td>2.67</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>2018-08-29</th>
+      <td>3.36</td>
+      <td>A</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="plot-your-data">Plot Your Data</h2>
+<p>Next, plot the time series using <code class="highlighter-rouge">matplotlib</code>. What do you notice?
+There is an unfortunate gap in the data. The good news that while this gap may not work for some analyses, it is acceptable when you calculate a recurrence interval (based on our assumptions of independence and stationarity).</p>
+
+<p>Note that below I grab the site variable and add it to my plot title using the syntax:</p>
+
+<p><code class="highlighter-rouge">ax.set_title("Stream Discharge - Station {} \n 1946-2017".format(site))</code></p>
+
+<p>where <code class="highlighter-rouge">{}</code> is a placeholder for the variable that you want to insert into the title and <code class="highlighter-rouge">.format(site)</code> tells <code class="highlighter-rouge">Python</code> to grab and format the <code class="highlighter-rouge">site</code> variable that was defined above.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Plot using matplotlib
+</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">longmont_discharge</span><span class="p">.</span><span class="n">index</span><span class="p">,</span>
+           <span class="n">y</span><span class="o">=</span><span class="n">longmont_discharge</span><span class="p">[</span><span class="s">"discharge"</span><span class="p">],</span>
+           <span class="n">marker</span><span class="o">=</span><span class="s">"o"</span><span class="p">,</span>
+           <span class="n">s</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+           <span class="n">color</span><span class="o">=</span><span class="s">"purple"</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s">"Date"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s">"Discharge Value (CFS)"</span><span class="p">,</span>
+       <span class="n">title</span><span class="o">=</span><span class="s">"Stream Discharge - Station {} </span><span class="se">\n</span><span class="s"> {} to {}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/01-time-series/02-flood-data-analysis/2019-11-19-time-series-01-exceedance-probability-and-return-periods/2019-11-19-time-series-01-exceedance-probability-and-return-periods_19_0.png" alt="Stream Discharge for the longmont USGS stream gage from 1946-2017" />
+<figcaption>Stream Discharge for the longmont USGS stream gage from 1946-2017</figcaption>
+
+</figure>
+
+<h2 id="annual-maxima">Annual Maxima</h2>
+
+<p>Next you will look at the annual maxima of both instantanoeus and mean daily streamflow. Annual maxima refers to the biggest value that occured within each year. In the case of stream discharge - this is the largest discharge value that was recorded in cubic feet per second (CFS) during each year.</p>
+
+<p>There are two ways we can identify annual maxima for USGS stream gages.</p>
+
+<ol>
+  <li>You can take the daily mean values to construct a series of the annual maximum value. This is done using <code class="highlighter-rouge">pandas resample</code> - you learned how to do this in a previous lesson!</li>
+  <li>You can download the instantaneous annual maximum value dataset from <a href="https://nwis.waterdata.usgs.gov/nwis" target="_blank">USGS  here</a>.</li>
+</ol>
+
+<p>Note that you will compare the data that you download to the analysis of mean dailydata you do below. 
+The instantaneous annual maxima data from the USGS is data collected every 5-30 minutes.</p>
+
+<p>The annual maxima that you derive below uses the mean daily value data that you downloaded above. Do you think you will get the same annual maxima each year?</p>
+
+<p>Let’s find out.</p>
+
+<h3 id="add-a-year-column-to-your-data">Add a Year Column to Your Data</h3>
+
+<p>Note that below you will add a ‘year’ column to the longmont discharge data. While this step is not necessary for resampling. It will make your life easier when you plot the data later.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># add a year column to your longmont discharge data
+</span><span class="n">longmont_discharge</span><span class="p">[</span><span class="s">"year"</span><span class="p">]</span> <span class="o">=</span> <span class="n">longmont_discharge</span><span class="p">.</span><span class="n">index</span><span class="p">.</span><span class="n">year</span>
+
+<span class="c1"># Calculate annual max by resampling
+</span><span class="n">longmont_discharge_annual_max</span> <span class="o">=</span> <span class="n">longmont_discharge</span><span class="p">.</span><span class="n">resample</span><span class="p">(</span><span class="s">'AS'</span><span class="p">).</span><span class="nb">max</span><span class="p">()</span>
+<span class="n">longmont_discharge_annual_max</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>discharge</th>
+      <th>flag</th>
+      <th>year</th>
+    </tr>
+    <tr>
+      <th>datetime</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1946-01-01</th>
+      <td>99.0</td>
+      <td>A</td>
+      <td>1946.0</td>
+    </tr>
+    <tr>
+      <th>1947-01-01</th>
+      <td>1930.0</td>
+      <td>A</td>
+      <td>1947.0</td>
+    </tr>
+    <tr>
+      <th>1948-01-01</th>
+      <td>339.0</td>
+      <td>A</td>
+      <td>1948.0</td>
+    </tr>
+    <tr>
+      <th>1949-01-01</th>
+      <td>2010.0</td>
+      <td>A</td>
+      <td>1949.0</td>
+    </tr>
+    <tr>
+      <th>1950-01-01</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="import-usgs-annual-peak-max-data">Import USGS Annual Peak Max Data</h3>
+<p>Next import the USGS annual maxima data.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># download usgs annual max data from figshare
+</span><span class="n">url</span> <span class="o">=</span> <span class="s">"https://nwis.waterdata.usgs.gov/nwis/peak?site_no=06730500&amp;agency_cd=USGS&amp;format=rdb"</span>
+<span class="n">download_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">"data"</span><span class="p">,</span> <span class="s">"colorado-flood"</span><span class="p">,</span> 
+                             <span class="s">"downloads"</span><span class="p">,</span> <span class="s">"annual-peak-flow.txt"</span><span class="p">)</span>
+
+<span class="n">urllib</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">download_path</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>('data/colorado-flood/downloads/annual-peak-flow.txt',
+ &lt;http.client.HTTPMessage at 0x7f79de7de490&gt;)
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># A function that counts the number of lines with a comment 
+</span><span class="k">def</span> <span class="nf">count_the</span><span class="p">(</span><span class="n">file_url</span><span class="p">):</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">file_url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="nb">file</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">text</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">file</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'#'</span><span class="p">):</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">count</span>
+
+<span class="c1"># Lines to skip
+</span><span class="n">line_to_skip</span> <span class="o">=</span> <span class="n">count_the</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
+</code></pre></div></div>
+
+<p>The data that you are downloading are <code class="highlighter-rouge">tab-delimited</code>. When you import, be sure to specify</p>
+
+<p><code class="highlighter-rouge">sep='\t'</code></p>
+
+<p>to ensure that the data download properly. Notice that below the <code class="highlighter-rouge">index_col</code> for the data is not specified when the data are opened in pandas. This is because you will need to bring in 2 lines of data headers. In pandas, two header rows import as a <code class="highlighter-rouge">multi-index</code> element. In this particular case it is easier to specify the index after you have removed one line of this <code class="highlighter-rouge">multi-index</code>.</p>
+
+<p>Your pandas read_csv function will include 4 arguments as follows:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">download_path</code>: this is the path where you file is saved</li>
+  <li><code class="highlighter-rouge">header=[1,2]</code>: this tells pandas to import two header lines - lines 1 and 2 after the skipped rows</li>
+  <li><code class="highlighter-rouge">sep='\t'</code>: import the data as a tab delimited file</li>
+  <li><code class="highlighter-rouge">skiprows = 63</code>: skip the first 63 rows of the data. IF you open the data in a text editor you will notice the entire top of the file is all metadata.</li>
+  <li><code class="highlighter-rouge">parse_dates = [2]</code>: convert the second column in the data to a datetime format</li>
+</ul>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Open the data using pandas
+</span><span class="n">usgs_annual_max</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">download_path</span><span class="p">,</span>
+                              <span class="n">skiprows</span><span class="o">=</span><span class="p">[</span><span class="n">line_to_skip</span><span class="p">],</span>
+                              <span class="n">comment</span><span class="o">=</span><span class="s">"#"</span><span class="p">,</span>
+                              <span class="n">sep</span><span class="o">=</span><span class="s">'</span><span class="se">\t</span><span class="s">'</span><span class="p">,</span>
+                              <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s">"peak_dt"</span><span class="p">,</span><span class="s">"peak_va"</span><span class="p">],</span>
+                              <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s">"peak_dt"</span><span class="p">],</span>
+                              <span class="n">index_col</span><span class="o">=</span><span class="s">"peak_dt"</span><span class="p">)</span>
+
+<span class="n">usgs_annual_max</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>peak_va</th>
+    </tr>
+    <tr>
+      <th>peak_dt</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1927-07-29</th>
+      <td>407.0</td>
+    </tr>
+    <tr>
+      <th>1928-06-04</th>
+      <td>694.0</td>
+    </tr>
+    <tr>
+      <th>1929-07-23</th>
+      <td>530.0</td>
+    </tr>
+    <tr>
+      <th>1930-08-18</th>
+      <td>353.0</td>
+    </tr>
+    <tr>
+      <th>1931-05-29</th>
+      <td>369.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Next, add a year column to your data for easy plotting and make sure that you have only one value per year as expected.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Add a year column to the data for easier plotting
+</span><span class="n">usgs_annual_max</span><span class="p">[</span><span class="s">"year"</span><span class="p">]</span> <span class="o">=</span> <span class="n">usgs_annual_max</span><span class="p">.</span><span class="n">index</span><span class="p">.</span><span class="n">year</span>
+
+<span class="c1"># Are there any years that have two entries?
+</span><span class="n">usgs_annual_max</span><span class="p">[</span><span class="n">usgs_annual_max</span><span class="p">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s">"year"</span><span class="p">)</span> <span class="o">==</span> <span class="bp">True</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>peak_va</th>
+      <th>year</th>
+    </tr>
+    <tr>
+      <th>peak_dt</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1947-10-15</th>
+      <td>721.0</td>
+      <td>1947</td>
+    </tr>
+    <tr>
+      <th>1993-10-18</th>
+      <td>497.0</td>
+      <td>1993</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>It looks like you have two years that have more than one data value - 1947 and 1993. For the purpose of this exercise let’s only take the largest discharge value from each year.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Remove duplicate years - keep the max discharge value
+</span><span class="n">usgs_annual_max</span> <span class="o">=</span> <span class="n">usgs_annual_max</span><span class="p">.</span><span class="n">sort_values</span><span class="p">(</span>
+    <span class="s">'peak_va'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">).</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="s">'year'</span><span class="p">).</span><span class="n">sort_index</span><span class="p">()</span>
+
+<span class="c1"># If this returns no results you have successfully removed duplicates!
+</span><span class="n">usgs_annual_max</span><span class="p">[</span><span class="n">usgs_annual_max</span><span class="p">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s">"year"</span><span class="p">)</span> <span class="o">==</span> <span class="bp">True</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>peak_va</th>
+      <th>year</th>
+    </tr>
+    <tr>
+      <th>peak_dt</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+</div>
+
+<p>Finally, you are ready to plot the USGS annual max with the calculated annual max derived from your daily mean data. Are they the same? Or Different?</p>
+
+<p>What could cause differences in these two different approaches to getting annual max values?</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Plot calculated vs USGS annual max flow values
+</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">usgs_annual_max</span><span class="p">[</span><span class="s">"year"</span><span class="p">],</span>
+        <span class="n">usgs_annual_max</span><span class="p">[</span><span class="s">"peak_va"</span><span class="p">],</span>
+        <span class="n">color</span><span class="o">=</span><span class="s">"purple"</span><span class="p">,</span>
+        <span class="n">linestyle</span><span class="o">=</span><span class="s">':'</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="s">'o'</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s">"Instantaneous Value"</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">longmont_discharge_annual_max</span><span class="p">[</span><span class="s">"year"</span><span class="p">],</span>
+        <span class="n">longmont_discharge_annual_max</span><span class="p">[</span><span class="s">"discharge"</span><span class="p">],</span>
+        <span class="n">color</span><span class="o">=</span><span class="s">"lightgrey"</span><span class="p">,</span>
+        <span class="n">linestyle</span><span class="o">=</span><span class="s">':'</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="s">'o'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"Mean Daily Value"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span>
+    <span class="s">"Annual Maxima - Downloaded Instantaneous vs. Derived Daily Peak Flows"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/01-time-series/02-flood-data-analysis/2019-11-19-time-series-01-exceedance-probability-and-return-periods/2019-11-19-time-series-01-exceedance-probability-and-return-periods_35_0.png" alt="Annual maxima data compared - USGS product vs daily value calculated." />
+<figcaption>Annual maxima data compared - USGS product vs daily value calculated.</figcaption>
+
+</figure>
+
+<h2 id="optional---difference-bar-plot">Optional - Difference Bar Plot</h2>
+
+<p>To further more quickly explore differences between the USGS annual max data set and the annual max that you calculated using the mean daily value data, you can calculate a difference value between the USGS max value and your annual max calculated from daily mean data. You don’t need to do this for your homework however! It’s just setup for you to see what the differences look like.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Merge the two pandas dataframes on the year column
+</span><span class="n">usgs_calculated</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">longmont_discharge_annual_max</span><span class="p">,</span>
+                           <span class="n">usgs_annual_max</span><span class="p">,</span>
+                           <span class="n">left_on</span><span class="o">=</span><span class="s">"year"</span><span class="p">,</span>
+                           <span class="n">right_on</span><span class="o">=</span><span class="s">"year"</span><span class="p">)</span>
+
+<span class="c1"># Subtract usgs values from your calculated values
+</span><span class="n">usgs_calculated</span><span class="p">[</span><span class="s">"diff"</span><span class="p">]</span> <span class="o">=</span> <span class="n">usgs_calculated</span><span class="p">[</span><span class="s">"peak_va"</span><span class="p">]</span> <span class="o">-</span> \
+    <span class="n">usgs_calculated</span><span class="p">[</span><span class="s">"discharge"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>Once you have calculated a difference column, create a barplot.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Plot difference
+</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="p">.</span><span class="n">bar</span><span class="p">(</span><span class="n">usgs_calculated</span><span class="p">[</span><span class="s">"year"</span><span class="p">],</span>
+       <span class="n">usgs_calculated</span><span class="p">[</span><span class="s">"diff"</span><span class="p">],</span>
+      <span class="n">color</span><span class="o">=</span><span class="s">"purple"</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span>
+    <span class="s">"Difference Plot of Annual Maxima </span><span class="se">\n</span><span class="s">Instantaneous Minus Mean Daily"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/01-time-series/02-flood-data-analysis/2019-11-19-time-series-01-exceedance-probability-and-return-periods/2019-11-19-time-series-01-exceedance-probability-and-return-periods_41_0.png" alt="Bar plot showing the difference between the USGS max product and the calculated annual max." />
+<figcaption>Bar plot showing the difference between the USGS max product and the calculated annual max.</figcaption>
+
+</figure>
+
+<h2 id="calculate-return-period">Calculate Return Period</h2>
+
+<p>Now that you have both datasets, you are ready to calculate the return period from each. You will calculate this value and the associated probability of each event size for both the USGS max annual flow data and for the max flow value that you derived from the mean daily data.  To calculate return period you will do the following:</p>
+
+<ol>
+  <li>Sort your data from smallest to largest.</li>
+  <li>Calculate exceedance probabilities using the equation below where <code class="highlighter-rouge">n</code> is length of the record and <code class="highlighter-rouge">i</code> is the rank.</li>
+  <li>Calculate the inverse of the exceedance probabilities to determine return period in years.</li>
+  <li>Plot flood magnitudes against return time. It is common to plot these kinds of data on log-linear or log-log axes.</li>
+</ol>
+
+<hr />
+
+<p>Exceedance probability equation:</p>
+
+<script type="math/tex; mode=display">Probablity = \frac{n-i+1}{n+1}</script>
+
+<p>where i is the rank order (smallest to largest) from 1 to n. Note that the limits of this equation vary from n/(n+1) ~ 1 for the smallest events and 1/(n+1) for the largest events (i.e., the largest events have a very small exceedance probability).</p>
+
+<hr />
+
+<p class="notice--success"><i class="fa fa-star"></i> <strong>Data Tip:</strong> If you want to extrapolate beyond the observations that you have - for instance to predict what a 1000 year flood would be given only 100 years of data - then you would need to fit a model to the data.</p>
+
+<p>The steps that you will need to implement are below.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Sort data smallest to largest
+</span><span class="n">longmont_discharge_sorted</span> <span class="o">=</span> <span class="n">longmont_discharge</span><span class="p">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s">"discharge"</span><span class="p">)</span>
+
+<span class="c1"># Count total obervations
+</span><span class="n">n</span> <span class="o">=</span> <span class="n">longmont_discharge_sorted</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Add a numbered column 1 -&gt; n to use in return calculation for rank
+</span><span class="n">longmont_discharge_sorted</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">'rank'</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">n</span><span class="p">))</span>
+
+<span class="c1"># Calculate probability - note you may need to adjust this value based upon the time period of your data
+</span><span class="n">longmont_discharge_sorted</span><span class="p">[</span><span class="s">"probability"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">longmont_discharge_sorted</span><span class="p">[</span><span class="s">"rank"</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">longmont_discharge_sorted</span><span class="p">[</span><span class="s">"return-years"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="mi">1</span> <span class="o">/</span> <span class="n">longmont_discharge_sorted</span><span class="p">[</span><span class="s">"probability"</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>You will ultimately perform the steps above several times for both the discharge data and the precipitation data as a part of your homework. Turning these steps into a function will help you more efficiently process your data. 
+An example of what this function could look like is below. For your homework, you will add documentation to this function.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create a function from the workflow below
+</span>
+<span class="c1"># Add an argument for annual vs daily...
+</span>
+
+<span class="k">def</span> <span class="nf">calculate_return</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">colname</span><span class="p">):</span>
+    <span class="s">'''
+    Add Documentation Here
+
+
+    '''</span>
+    <span class="c1"># Sort data smallest to largest
+</span>    <span class="n">sorted_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">colname</span><span class="p">)</span>
+    
+    <span class="c1"># Count total obervations
+</span>    <span class="n">n</span> <span class="o">=</span> <span class="n">sorted_data</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="c1"># Add a numbered column 1 -&gt; n to use in return calculation for rank
+</span>    <span class="n">sorted_data</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">'rank'</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">n</span><span class="p">))</span>
+    
+    <span class="c1"># Calculate probability
+</span>    <span class="n">sorted_data</span><span class="p">[</span><span class="s">"probability"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">sorted_data</span><span class="p">[</span><span class="s">"rank"</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate return - data are daily to then divide by 365?
+</span>    <span class="n">sorted_data</span><span class="p">[</span><span class="s">"return-years"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">sorted_data</span><span class="p">[</span><span class="s">"probability"</span><span class="p">])</span>
+
+    <span class="k">return</span><span class="p">(</span><span class="n">sorted_data</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Once you have a function, you can calculate return period and probability on both datasets.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">longmont_prob</span> <span class="o">=</span> <span class="n">calculate_return</span><span class="p">(</span><span class="n">longmont_discharge</span><span class="p">,</span> <span class="s">"discharge"</span><span class="p">)</span>
+
+<span class="c1"># Because these data are daily,
+# divide return period in days by 365 to get a return period in years
+</span><span class="n">longmont_prob</span><span class="p">[</span><span class="s">"return-years"</span><span class="p">]</span> <span class="o">=</span> <span class="n">longmont_prob</span><span class="p">[</span><span class="s">"return-years"</span><span class="p">]</span> <span class="o">/</span> <span class="mi">365</span>
+<span class="n">longmont_prob</span><span class="p">[</span><span class="s">"probability"</span><span class="p">]</span> <span class="o">=</span> <span class="n">longmont_prob</span><span class="p">[</span><span class="s">"probability"</span><span class="p">]</span> <span class="o">*</span> <span class="mi">365</span>
+<span class="n">longmont_prob</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rank</th>
+      <th>discharge</th>
+      <th>flag</th>
+      <th>year</th>
+      <th>probability</th>
+      <th>return-years</th>
+    </tr>
+    <tr>
+      <th>datetime</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2013-09-16</th>
+      <td>17078</td>
+      <td>3270.0</td>
+      <td>A e</td>
+      <td>2013</td>
+      <td>0.106831</td>
+      <td>9.360548</td>
+    </tr>
+    <tr>
+      <th>2013-09-12</th>
+      <td>17079</td>
+      <td>3680.0</td>
+      <td>A</td>
+      <td>2013</td>
+      <td>0.085465</td>
+      <td>11.700685</td>
+    </tr>
+    <tr>
+      <th>2013-09-15</th>
+      <td>17080</td>
+      <td>3970.0</td>
+      <td>A e</td>
+      <td>2013</td>
+      <td>0.064099</td>
+      <td>15.600913</td>
+    </tr>
+    <tr>
+      <th>2013-09-14</th>
+      <td>17081</td>
+      <td>4970.0</td>
+      <td>A e</td>
+      <td>2013</td>
+      <td>0.042733</td>
+      <td>23.401370</td>
+    </tr>
+    <tr>
+      <th>2013-09-13</th>
+      <td>17082</td>
+      <td>8910.0</td>
+      <td>A e</td>
+      <td>2013</td>
+      <td>0.021366</td>
+      <td>46.802740</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Calculate the same thing using the USGS annual max data
+</span><span class="n">usgs_annual_prob</span> <span class="o">=</span> <span class="n">calculate_return</span><span class="p">(</span><span class="n">usgs_annual_max</span><span class="p">,</span> <span class="s">"peak_va"</span><span class="p">)</span>
+<span class="n">usgs_annual_prob</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rank</th>
+      <th>peak_va</th>
+      <th>year</th>
+      <th>probability</th>
+      <th>return-years</th>
+    </tr>
+    <tr>
+      <th>peak_dt</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1954-01-14</th>
+      <td>1</td>
+      <td>26.0</td>
+      <td>1954</td>
+      <td>0.985075</td>
+      <td>1.015152</td>
+    </tr>
+    <tr>
+      <th>1932-07-13</th>
+      <td>2</td>
+      <td>128.0</td>
+      <td>1932</td>
+      <td>0.970149</td>
+      <td>1.030769</td>
+    </tr>
+    <tr>
+      <th>1940-07-03</th>
+      <td>3</td>
+      <td>174.0</td>
+      <td>1940</td>
+      <td>0.955224</td>
+      <td>1.046875</td>
+    </tr>
+    <tr>
+      <th>1946-07-19</th>
+      <td>4</td>
+      <td>178.0</td>
+      <td>1946</td>
+      <td>0.940299</td>
+      <td>1.063492</td>
+    </tr>
+    <tr>
+      <th>2002-05-24</th>
+      <td>5</td>
+      <td>238.0</td>
+      <td>2002</td>
+      <td>0.925373</td>
+      <td>1.080645</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="plot-event-probability">Plot Event Probability</h3>
+
+<p>Below, you plot Discharge on the x-axis and the probability that an event of that size will occur on the y-axis.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Compare both datasets
+</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">usgs_annual_prob</span><span class="p">.</span><span class="n">plot</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">"peak_va"</span><span class="p">,</span>
+                              <span class="n">y</span><span class="o">=</span><span class="s">"probability"</span><span class="p">,</span>
+                              <span class="n">title</span><span class="o">=</span><span class="s">"Probability "</span><span class="p">,</span>
+                              <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                              <span class="n">color</span><span class="o">=</span><span class="s">'purple'</span><span class="p">,</span>
+                              <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+                              <span class="n">logy</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                              <span class="n">label</span><span class="o">=</span><span class="s">"USGS Annual Max Calculated"</span><span class="p">)</span>
+
+<span class="n">longmont_prob</span><span class="p">.</span><span class="n">plot</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s">"probability"</span><span class="p">,</span>
+                           <span class="n">x</span><span class="o">=</span><span class="s">"discharge"</span><span class="p">,</span>
+                           <span class="n">title</span><span class="o">=</span><span class="s">"Probability "</span><span class="p">,</span>
+                           <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                           <span class="n">color</span><span class="o">=</span><span class="s">'grey'</span><span class="p">,</span>
+                           <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+                           <span class="n">logy</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                           <span class="n">label</span><span class="o">=</span><span class="s">"Daily Mean Calculated"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+          <span class="n">framealpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"Probability"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">"Discharge Value (CFS)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span>
+    <span class="s">"Probability of Discharge Events </span><span class="se">\n</span><span class="s"> USGS Annual Max Data Compared to Daily Mean Calculated Annual Max"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/01-time-series/02-flood-data-analysis/2019-11-19-time-series-01-exceedance-probability-and-return-periods/2019-11-19-time-series-01-exceedance-probability-and-return-periods_54_0.png" alt="Plot showing the probability of a discharge event using both datasets. Note that the y-axis is log scaled in this plot." />
+<figcaption>Plot showing the probability of a discharge event using both datasets. Note that the y-axis is log scaled in this plot.</figcaption>
+
+</figure>
+
+<h2 id="plot-stream-discharge-return-period">Plot Stream Discharge Return Period</h2>
+
+<p>And then you plot steram dicharge vs return period. This plot shows you the frequency in years that you can expect an event of any magnitude to occur upon. But remember that this doesn’t mean that this size of an event will occur every x years! The probability plot above tells you what the probability is that any event of any size might occur in any particular year.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">longmont_prob</span><span class="p">.</span><span class="n">plot</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s">"discharge"</span><span class="p">,</span>
+                           <span class="n">x</span><span class="o">=</span><span class="s">"return-years"</span><span class="p">,</span>
+                           <span class="n">title</span><span class="o">=</span><span class="s">"Return Period (Years)"</span><span class="p">,</span>
+                           <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                           <span class="n">color</span><span class="o">=</span><span class="s">'purple'</span><span class="p">,</span>
+                           <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+                           <span class="n">label</span><span class="o">=</span><span class="s">"Daily Mean Calculated"</span><span class="p">)</span>
+
+<span class="n">usgs_annual_prob</span><span class="p">.</span><span class="n">plot</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s">"peak_va"</span><span class="p">,</span>
+                              <span class="n">x</span><span class="o">=</span><span class="s">"return-years"</span><span class="p">,</span>
+                              <span class="n">title</span><span class="o">=</span><span class="s">"Return Period (Years)"</span><span class="p">,</span>
+                              <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                              <span class="n">color</span><span class="o">=</span><span class="s">'grey'</span><span class="p">,</span>
+                              <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+                              <span class="n">label</span><span class="o">=</span><span class="s">"USGS Annual Max"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+          <span class="n">framealpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">"Return Period (Years)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"Discharge Value (CFS)"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/01-time-series/02-flood-data-analysis/2019-11-19-time-series-01-exceedance-probability-and-return-periods/2019-11-19-time-series-01-exceedance-probability-and-return-periods_56_0.png" alt="Plot showing the return period of a discharge event using both datasets. Note that the y-axis is log scaled in this plot." />
+<figcaption>Plot showing the return period of a discharge event using both datasets. Note that the y-axis is log scaled in this plot.</figcaption>
+
+</figure>
+
+<h3 id="references">References</h3>
+<p>Falcone, J. A. (2011). GAGES-II: Geospatial attributes of gages for evaluating streamflow. US Geological Survey.</p>
+
+<p>Lins, H. F. (2012). USGS hydro-climatic data network 2009 (HCDN-2009). US Geological Survey Fact Sheet, 3047(4).</p>
+
+<p>Yochum, S. E. (2015, April). Colorado Front Range Flood of 2013: Peak flows and flood frequencies. In Proceedings of the 3rd Joint Federal Interagency Conference on Sedimentation and Hydrologic Modeling, Reno, NV, USA (pp. 19-23).</p>
+
+
+          
+
+        
+
+        <!-- if the page is a course lesson, add pagination -->
+
+        
+         <!-- This is clunky code that forces pagination across lesson sets -->
+<!-- NOTE: it won't include slideshows as written which makes sense -->
+<!-- add forced pagination -->
+<!-- first, get total lesson count -->
+
+<div class="previous--next">
+
+
+
+
+
+<!-- if it's page one - then no previous button -->
+<!-- how do i figure out the link? i have to loop through again? -->
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+       <a href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/precipitation-discharge-mass-balance/" class="btn btn--info btn--large btn-success" style="float:right" >
+         Cumulative Sums in Pandas
+         <i class="fa fa-4 fa-arrow-circle-right" aria-hidden="true"></i></a>
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags
+  
+  <span class="a-main-tag">
+  <i class="fa fa-fw fa-tag" aria-hidden="true"></i><a href=http://localhost:4000/tags/reproducible-science-and-programming/>Reproducible science and programming</a>:
+  </span>
+  
+    
+    <a href=http://localhost:4000/tags/reproducible-science-and-programming/jupyter-notebook/>jupyter notebook</a> 
+    
+    , 
+  
+    
+    <a href=http://localhost:4000/tags/reproducible-science-and-programming/python/>python</a> 
+    
+    
+  
+
+  <span class="a-main-tag">
+  <i class="fa fa-fw fa-tag" aria-hidden="true"></i><a href=http://localhost:4000/tags/time-series/>Time series</a>:
+  </span>
+  
+
+  <span class="a-main-tag">
+  <i class="fa fa-fw fa-tag" aria-hidden="true"></i><a href=http://localhost:4000/tags/data-exploration-and-analysis/>Data exploration and analysis</a>:
+  </span>
+  
+    
+    <a href=http://localhost:4000/tags/data-exploration-and-analysis/data-visualization/>data visualization</a> 
+    
+    
+  
+
+
+
+
+
+
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-09-11">September 11, 2020</time></p>
+        
+        <!-- Add license information w/ DOI to the bottom -->
+        
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+      </footer>
+
+      
+
+
+<section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/floods-return-period-and-probability/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/floods-return-period-and-probability/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/floods-return-period-and-probability/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/floods-return-period-and-probability/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+<br><br>
+  <a href="http://bit.ly/2jc5SXy" target="_blank">
+    <img src="http://localhost:4000/images/earth-data-analytics-professional-certificate-banner.png" alt="Get a professional Certificate in Earth Data Analytics at University of Colorado, Boulder" width="40%"></a>
+</section>
+
+
+       
+    </div>
+
+    
+      
+
+
+<div class="page__comments">
+  <h4 class="page__comments-title">Leave a Comment</h4>
+  
+    <section id="disqus_thread"></section>
+  
+</div>
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      
+        <h4 class="page__related-title">You May Also Enjoy</h4>
+      
+      <div class="grid__wrapper">
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/earth-analytics-bootcamp/plot-data-python">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">Plot Data With Matplotlib
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  1 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">
+
+     This Week
+
+  
+
+
+</p>
+    </article>
+  </a>
+</div>
+
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/summarize-climate-data-by-season/">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">Calculate Seasonal Summary Values from Climate Data Variables Stored in NetCDF 4 Format: Work With MACA v2 Climate Data in Python
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  25 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">Learn how to calculate seasonal summary values for MACA 2 climate data using xarray and region mask in open source Python.
+</p>
+    </article>
+  </a>
+</div>
+
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/subset-netcdf4-climate-data-spatially-aoi/">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">Calculate Summary Values Using Spatial Areas of Interest (AOIs) including Shapefiles for Climate Data Variables Stored in NetCDF 4 Format: Work With MACA v2 Climate Data in Python
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  33 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">Climate datasets stored in netcdf 4 format often cover the entire globe or an entire country. Learn how to subset climate data spatially and by time slices u...</p>
+    </article>
+  </a>
+</div>
+
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/use-netcdf-in-python-xarray/">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">How to Open and Process NetCDF 4 Data Format in Open Source Python
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  26 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">Historic and projected climate data are most often stored in netcdf 4 format. Learn how to open and process MACA version 2 climate data for the Continental U...</p>
+    </article>
+  </a>
+</div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+
+
+<!-- Adding analytics code -->
+
+        
+
+
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    <li>
+      <strong>&copy; 2021 Earth Lab -
+      <a href="http://localhost:4000/license"> All materials on this site
+        are subject to the CC BY-NC-ND 4.0 License. </a>
+      </strong>
+    </li>
+  </ul>
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/earthlabcu"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+    
+      <li><a href="http://github.com/earthlab"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<!--
+<div class="page__footer-copyright">Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+-->
+
+      </footer>
+    </div>
+
+    <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+
+
+
+  
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'earthlabcu';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+<script type="text/javascript"
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-84081999-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+
+  </body>
+</html>
+

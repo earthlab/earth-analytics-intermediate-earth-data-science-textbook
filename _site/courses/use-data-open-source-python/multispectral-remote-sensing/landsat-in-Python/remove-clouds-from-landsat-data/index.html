@@ -1,0 +1,4429 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+
+
+<meta charset="utf-8">
+
+
+
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>Clean Remote Sensing Data in Python - Clouds, Shadows & Cloud Masks | Earth Data Science - Earth Lab </title>
+
+
+
+
+
+
+
+<meta property="og:locale" content="en-US">
+<meta property="og:site_name" content="Earth Data Science - Earth Lab">
+<meta property="og:title" content="Clean Remote Sensing Data in Python - Clouds, Shadows &amp; Cloud Masks">
+
+
+  <link rel="canonical" href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/remove-clouds-from-landsat-data/">
+  <meta property="og:url" content="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/remove-clouds-from-landsat-data/">
+
+
+
+  <meta content="Landsat remote sensing data often has pixels that are covered by clouds and cloud shadows. Learn how to remove cloud covered landsat pixels using open source Python." name="description">
+  <meta property="og:description" content="Landsat remote sensing data often has pixels that are covered by clouds and cloud shadows. Learn how to remove cloud covered landsat pixels using open source Python.">
+
+
+<!-- twitter cards -->
+
+  <meta name="twitter:site" content="@earthlabcu">
+  <meta name="twitter:title" content="Clean Remote Sensing Data in Python - Clouds, Shadows &amp; Cloud Masks">
+  <meta name="twitter:description" content="Landsat remote sensing data often has pixels that are covered by clouds and cloud shadows. Learn how to remove cloud covered landsat pixels using open source Python.">
+  <meta name="twitter:url" content="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/remove-clouds-from-landsat-data/">
+
+  
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:image" content="https://earthdatascience.org/images/earth_sm_twit.png">
+    <meta name="twitter:image:alt" content="The Earthlab Logo - image of a globe with courses, lessons and tutorials">
+
+    
+  
+
+  
+
+
+
+  
+
+  
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2020-03-02T00:00:00-07:00">
+  
+    <link rel="next" href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/replace-raster-cell-values-in-remote-sensing-images-in-python/" title="How to Replace Raster Cell Values with Values from A Different Raster Data Set in Python">
+  
+  
+    <link rel="prev" href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/open-and-crop-data/" title="Open and Crop Landsat Remote Sensing Data in Open Source Python">
+  
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "Earth Analytics",
+      "url" : "http://localhost:4000",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Earth Data Science - Earth Lab Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-site-verification" content="LfpevjsE0wlELv5KKOZv1T2RhRimGSiRckWv5ZC19GU" />
+<!-- don't use the old cataloged meta tags -->
+<meta name="googlebot" content="noodp">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+
+<!-- For all browsers
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">-->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
+
+    <script src="http://localhost:4000/assets/js/copy-code.js"></script>
+  </head>
+
+  <body>
+
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    
+
+<!-- search bar begin  - turning off for now-->
+
+<div class="search">
+<form role="search" method="get" action="http://localhost:4000/search/">
+    <input id="q" name="q"
+           placeholder="Search earth data science site" type="text">
+</form>
+<!--<span class='cu-boulder'><a href="http://www.colorado.edu/earthlab" target="_blank">Earth Lab University of Colorado - Boulder Home </a></span> -->
+</div>
+
+
+<!-- search bar END -->
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <button><div class="navicon"></div></button>
+        <ul class="visible-links">
+          <li class="masthead__menu-item masthead__menu-item--lg"><a href="http://localhost:4000/"><img src="/images/earth-lab-logo.png" alt="Earth Lab - Earth Data Science" style="height:80%;width:85%"></a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/tutorials/">Tutorials</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/courses/">Courses</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/workshops/">Workshops</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/tools/">Tools</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/blog/">Blog</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/about/">About</a></li>
+          
+
+        </ul>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    
+
+
+
+  <div class="page__hero--overlay" style=" background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('http://localhost:4000/images/header-images/earth-data-analytics-professional-certificate-banner.jpg');">
+  <div class="wrapper">
+        <h1 class="page__title" itemprop="headline">
+          Earth Data Analytics Online Certificate
+        </h1>
+        <p><a href="http://bit.ly/2jc5SXy" target = "_blank" class="btn btn--light-outline btn--large">Enroll now! Learn more.</a></p>
+  </div>
+</div>
+
+
+
+
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="breadcrumbs" role="menubar" aria-label="breadcrumbs">
+ <ol itemscope itemtype="http://schema.org/BreadcrumbList">
+ <a href="http://localhost:4000"></a>
+ 
+ 
+ <!-- there is an offset of 1 so subtract 2 from the final crumb number-->
+ 
+   
+   
+     <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+       <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+       <meta itemprop="position" content="1" />
+     </li>
+     <span class="sep">/</span>
+   
+    
+        
+        <li><a href="http://localhost:4000/courses/">Courses </a>
+        <meta itemprop="position" content="2" />
+        <span class="sep">/</span></li>
+    
+  
+   
+    
+        
+        <li><a href="http://localhost:4000/courses/use-data-open-source-python/">Use data open source python </a>
+        <meta itemprop="position" content="3" />
+        <span class="sep">/</span></li>
+    
+  
+   
+    
+        
+        <li><a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/">Multispectral remote sensing </a>
+        <meta itemprop="position" content="4" />
+        <span class="sep">/</span></li>
+    
+  
+   
+    
+        
+        <li><a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/">Landsat in python </a>
+        <meta itemprop="position" content="5" />
+        <span class="sep">/</span></li>
+    
+  
+   
+    
+        <li class="current">Clean Remote Sensing Data in Python - Clouds, Shadows & Cloud Masks</li>
+    
+  
+</ol>
+</nav>
+
+<!-- from min mistakes -->
+
+
+
+
+  
+
+
+<div id="main" role="main">
+  
+
+
+
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+    
+    
+
+
+    
+
+    
+     <!--  Might be able to delete this This is the code that populates the side bar navigation if there is a class-->
+      
+
+
+
+
+
+
+
+<!-- make sure we're only grabbing pages for the course -->
+
+
+
+<!--<h3>Week 5 Lessons</h3>-->
+<!-- i don't think the code below is used as modules is defined lower down as well. -->
+
+<!-- This is how modules are sorted on the left hand side bar -->
+
+
+
+
+
+
+<h5><a href="http://localhost:4000/courses/intermediate-earth-data-science-textbook/" ><i class="fa fa-home" aria-hidden="true"></i> Intermediate earth data science textbook</a></h5>
+
+<!-- Just get the pages from this course -->
+
+
+
+
+
+
+<nav class="nav__list">
+
+
+
+
+
+
+
+<ul>
+  <li><span class="nav__sub-title"><i class="fa fa-book" aria-hidden="true"></i> Units</span>
+   <ul>
+
+       
+
+        
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 1 <a href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 TIME SERIES DATA IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/introduction-to-time-series-in-pandas-python/"> Chapter 1:   Time Series Data in Pandas </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/floods-return-period-and-probability/"> Chapter 1.5:   Flood Returns Period Analysis in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 2 <a href="http://localhost:4000/courses/use-data-open-source-python/intro-vector-data-python/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 INTRO TO SPATIAL VECTOR DATA IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-vector-data-python/spatial-data-vector-shapefiles/"> Chapter 2:   Spatial Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-vector-data-python/vector-data-processing/"> Chapter 3:   Processing Spatial Vector Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 3 <a href="http://localhost:4000/courses/use-data-open-source-python/intro-raster-data-python/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 INTRODUCTION TO RASTER DATA IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-raster-data-python/fundamentals-raster-data/"> Chapter 4:   Intro to Raster Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-raster-data-python/raster-data-processing/"> Chapter 5:   Processing Raster Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 4 <a href="http://localhost:4000/courses/use-data-open-source-python/spatial-data-applications/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 SPATIAL DATA APPLICATIONS IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/spatial-data-applications/lidar-remote-sensing-uncertainty/"> Chapter 6:   Uncertainty in Remote Sensing Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+                
+                    <li class='active-section'> <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/"><i class="fa fa-folder-open" aria-hidden="true"></i>
+                     5. MULTISPECTRAL REMOTE SENSING DATA IN PYTHON</a></li>
+
+            
+
+<div class='active-menu'>
+      <ul>
+        
+        <!-- Note that class-order allows you to sort modules by class order if there are more than 1 in a class -->
+        
+
+        
+
+        
+
+        
+        
+        <!-- If it's a textbook with a chapter number write "chapter", else assume it is a week -->
+
+          <li><span class="nav__sub-title grey"><i class="fa fa-caret-down" aria-hidden="true"></i>   Chapter 7 Intro to multispectral remote sensing data  </span></li>
+        <ul>
+
+      
+      <!-- count lessons -->
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/intro-multispectral-data/><!--5.1 --> - Intro to Multispectral Data</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/intro-multispectral-data/addititive-color-models-how-multispectral-imagery-is-drawn-on-computers/><!--5.2 --> - Additive Color Models</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+       </ul>
+        
+
+        
+        
+        <!-- If it's a textbook with a chapter number write "chapter", else assume it is a week -->
+
+          <li><span class="nav__sub-title grey"><i class="fa fa-caret-down" aria-hidden="true"></i>   Chapter 8 Naip  </span></li>
+        <ul>
+
+      
+      <!-- count lessons -->
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/intro-naip/><!--5.1 --> - Work with NAIP in Python</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/intro-naip/get-naip-data-earth-explorer/><!--5.2 --> - Get NAIP Data - Earth Explorer</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+       </ul>
+        
+
+        
+        
+        <!-- If it's a textbook with a chapter number write "chapter", else assume it is a week -->
+
+          <li><span class="nav__sub-title grey"><i class="fa fa-caret-down" aria-hidden="true"></i>   Chapter 9 Landsat data  </span></li>
+        <ul>
+
+      
+      <!-- count lessons -->
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/><!--5.1 --> - About Landsat Data</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/open-and-crop-data/><!--5.2 --> - Open & Crop Landsat Data</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/remove-clouds-from-landsat-data/ class='active'> <!--5.3 -->- Clouds, Shadows & Masks</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/replace-raster-cell-values-in-remote-sensing-images-in-python/><!--5.4 --> - Replace Raster Cell Values</a></li>
+          
+          
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/get-landsat-data-earth-explorer/><!--5.5 --> - Get Landsat Data - Earth Explorer</a></li>
+          
+          
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/landsat-exercises/><!--5.6 --> - Landsat Exercises</a></li>
+          
+          
+
+        
+       </ul>
+        
+
+        
+        
+        <!-- If it's a textbook with a chapter number write "chapter", else assume it is a week -->
+
+          <li><span class="nav__sub-title grey"><i class="fa fa-caret-down" aria-hidden="true"></i>   Chapter 10 Modis data  </span></li>
+        <ul>
+
+      
+      <!-- count lessons -->
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/modis-data-in-python/><!--5.1 --> - MODIS Data in Python</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/modis-data-in-python/download-modis-hdf4-data/><!--5.2 --> - Get MODIS data</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+       </ul>
+        
+
+        
+        
+        <!-- If it's a textbook with a chapter number write "chapter", else assume it is a week -->
+
+          <li><span class="nav__sub-title grey"><i class="fa fa-caret-down" aria-hidden="true"></i>   Chapter 11 Calculate vegetation indices in python  </span></li>
+        <ul>
+
+      
+      <!-- count lessons -->
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/vegetation-indices-in-python/><!--5.1 --> - Intro to Vegetation Indices</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/vegetation-indices-in-python/calculate-NDVI-python/><!--5.2 --> - Calculate NDVI</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/vegetation-indices-in-python/calculate-dNBR-Landsat-8/><!--5.3 --> - Calculate dNBR</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+       </ul>
+        
+
+        
+      </ul>
+
+      <!-- BEGIN Learn how to lessons -->
+       <ul>
+         
+         
+       </ul>
+
+
+     </div>
+
+
+      <!-- END BEGIN Learn how to lessons -->
+
+      <!--  -->
+      
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 6 <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 INTRODUCTION TO HIERARCHICAL DATA FORMATS IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/intro-to-hdf4/"> Chapter 12:   HDF4 </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/intro-to-climate-data/"> Chapter 13:   NETCDF </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 7 <a href="http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 INTRODUCTION TO API DATA ACCESS IN OPEN SOURCE PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/apis-in-python/"> Chapter 15:   APIs </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/social-media-text-mining-python/"> Chapter 16:   Twitter Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 8 <a href="http://localhost:4000/courses/use-data-open-source-python/earth-data-science-workflows/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 EARTH DATA SCIENCE WORKFLOWS</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/earth-data-science-workflows/design-efficient-automated-data-workflows/"> Chapter 12:   Design and Automate Data Workflows </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 9 <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 DATA STORIES</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/colorado-floods-2013/"> Chapter 20:   Flood overview  </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/what-is-lidar-data/"> Chapter 21:   Intro to Lidar Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/cold-springs-wildfire/"> Chapter 22:   Wildfire Overview </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+  </ul></li>
+ </ul>
+
+
+ <ul>
+   <li><span class="nav__sub-title"><i class="fa fa-folder-open" aria-hidden="true"></i> Overview</span>
+    <ul>
+     
+          
+         <li> <a href="http://localhost:4000/courses/use-data-open-source-python/">
+           Use Data for Earth and Environmental Science in Open Source Python Home </a></li>
+         
+
+     
+   </ul>
+ </li>
+</ul>
+</nav>
+
+<h5><a href="http://localhost:4000/courses/intermediate-earth-data-science-textbook/" ><i class="fa fa-home" aria-hidden="true"></i> intermediate-earth-data-science-textbook Home</a></h5>
+
+    
+
+    
+
+  
+  </div>
+
+
+
+
+
+
+<!-- begin science / science themes side bar nav -->
+
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+
+    <meta itemprop="headline" content="Clean Remote Sensing Data in Python - Clouds, Shadows &amp; Cloud Masks">
+    <meta itemprop="description" content="Landsat remote sensing data often has pixels that are covered by clouds and cloud shadows. Learn how to remove cloud covered landsat pixels using open source Python.">
+    <meta itemprop="datePublished" content="March 02, 2020">
+    <meta itemprop="dateModified" content="February 12, 2021">
+
+    <div class="page__inner-wrap">
+        <header>
+          
+
+          <!-- BEGIN: insert a welcome to the module block on pages that are part of a module set -->
+
+          <!-- END: insert welcome block -->
+
+          
+              
+
+            
+                <h1 class="page__title" itemprop="headline">
+                Lesson 3. 
+                 Clean Remote Sensing Data in Python - Clouds, Shadows &amp; Cloud Masks
+
+                
+                </h1>
+            
+
+          
+
+          
+            <div class="page__meta">
+              
+              
+              <a href="http://localhost:4000/authors/leah-wasser">Leah Wasser</a>
+              
+            </div>
+          
+
+            <br/>
+
+            
+
+              
+            
+
+            <!-- For tools pages add authors and tool title -->
+
+            
+        </header>
+
+
+
+      <section class="page__content" itemprop="text">
+
+        <!-- would like to include the TOC automatically but this does weird things-->
+        
+          
+            <aside class="sidebar__right">
+<nav class="toc">
+    <header><h4 class="nav__title"><i class="fa fa-file-text"></i> On This Page</h4></header>
+<ul class="toc__menu" id="markdown-toc">
+  <li><a href="#learning-objectives" id="markdown-toc-learning-objectives"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Learning Objectives</a></li>
+  <li><a href="#about-landsat-scenes" id="markdown-toc-about-landsat-scenes">About Landsat Scenes</a></li>
+  <li><a href="#cloud-masks-in-python" id="markdown-toc-cloud-masks-in-python">Cloud Masks in Python</a></li>
+  <li><a href="#raster-masks-for-remote-sensing-data" id="markdown-toc-raster-masks-for-remote-sensing-data">Raster Masks for Remote Sensing Data</a></li>
+  <li><a href="#what-does-the-metadata-tell-you" id="markdown-toc-what-does-the-metadata-tell-you">What Does the Metadata Tell You?</a></li>
+  <li><a href="#mask-a-landsat-scene-using-xarray" id="markdown-toc-mask-a-landsat-scene-using-xarray">Mask A Landsat Scene Using Xarray</a></li>
+</ul>
+
+  </nav>
+</aside>
+
+<div class="notice--success">
+
+  <h2 id="learning-objectives"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Learning Objectives</h2>
+
+  <ul>
+    <li>Describe the impacts of cloud cover on analysis of remote sensing data.</li>
+    <li>Use a mask to remove portions of an spectral dataset (image) that is covered by clouds / shadows.</li>
+    <li>Define mask / describe how a mask can be useful when working with remote sensing data.</li>
+  </ul>
+
+</div>
+
+<h2 id="about-landsat-scenes">About Landsat Scenes</h2>
+
+<p>Landsat satellites orbit the earth continuously collecting images of the Earth’s
+surface. These images, are divided into smaller regions - known as scenes.</p>
+
+<blockquote>
+  <p>Landsat images are usually divided into scenes for easy downloading. Each
+Landsat scene is about 115 miles long and 115 miles wide (or 100 nautical
+miles long and 100 nautical miles wide, or 185 kilometers long and 185 kilometers wide). -<em>wikipedia</em></p>
+</blockquote>
+
+<h3 id="challenges-working-with-landsat-remote-sensing-data">Challenges Working with Landsat Remote Sensing Data</h3>
+
+<p>In the previous lessons, you learned how to import a set of geotiffs that made
+up the bands of a Landsat raster. Each geotiff file was a part of a Landsat scene,
+that had been downloaded for this class by your instructor. The scene was further
+cropped to reduce the file size for the class.</p>
+
+<p>You ran into some challenges when you began to work with the data. The biggest
+problem was a large cloud and associated shadow that covered your study
+area of interest - the Cold Springs fire burn scar.</p>
+
+<h3 id="work-with-clouds-shadows-and-bad-pixels-in-remote-sensing-data">Work with Clouds, Shadows and Bad Pixels in Remote Sensing Data</h3>
+
+<p>Clouds and atmospheric conditions present a significant challenge when working
+with multispectral remote sensing data. Extreme cloud cover and shadows can make
+the data in those areas, un-usable given reflectance values are either washed out
+(too bright - as the clouds scatter all light back to the sensor) or are too
+dark (shadows which represent blocked or absorbed light).</p>
+
+<p>In this lesson you will learn how to deal with clouds in your remote sensing data.
+There is no perfect solution of course. You will just learn one approach.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">patches</span> <span class="k">as</span> <span class="n">mpatches</span><span class="p">,</span> <span class="n">colors</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ma</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="n">xr</span>
+<span class="kn">import</span> <span class="nn">rioxarray</span> <span class="k">as</span> <span class="n">rxr</span>
+<span class="kn">import</span> <span class="nn">earthpy</span> <span class="k">as</span> <span class="n">et</span>
+<span class="kn">import</span> <span class="nn">earthpy.plot</span> <span class="k">as</span> <span class="n">ep</span>
+<span class="kn">import</span> <span class="nn">earthpy.mask</span> <span class="k">as</span> <span class="n">em</span>
+
+<span class="c1"># Prettier plotting with seaborn
+</span><span class="n">sns</span><span class="p">.</span><span class="n">set_style</span><span class="p">(</span><span class="s">'white'</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+
+<span class="c1"># Download data and set working directory
+</span><span class="n">data</span> <span class="o">=</span> <span class="n">et</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">'cold-springs-fire'</span><span class="p">)</span>
+<span class="n">os</span><span class="p">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">et</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">HOME</span><span class="p">,</span>
+                      <span class="s">'earth-analytics'</span><span class="p">,</span>
+                      <span class="s">'data'</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>Next, you will load and plot landsat data. If you are completing the earth analytics course, you have worked with these data already in your homework.</p>
+
+<p>HINT: Since we are only using the RGB and the NIR bands for this exercise, you can use <code class="highlighter-rouge">*band[2-5]*.tif</code> inside <code class="highlighter-rouge">glob</code> to filter just the needed bands. This will save a lot of time in processing since you will only be using the data you need.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Custom function to read in list of tifs into an xarray object
+</span><span class="k">def</span> <span class="nf">combine_tifs</span><span class="p">(</span><span class="n">tif_list</span><span class="p">):</span>
+    <span class="s">"""A function that combines a list of tifs in the same CRS
+    and of the same extent into an xarray object
+
+    Parameters
+    ----------
+    tif_list : list
+        A list of paths to the tif files that you wish to combine.
+        
+    Returns
+    -------
+    An xarray object with all of the tif files in the listmerged into 
+    a single object.
+
+    """</span>
+
+    <span class="n">out_xr</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tif_path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tif_list</span><span class="p">):</span>
+        <span class="n">out_xr</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">rxr</span><span class="p">.</span><span class="n">open_rasterio</span><span class="p">(</span><span class="n">tif_path</span><span class="p">,</span> <span class="n">masked</span><span class="o">=</span><span class="bp">True</span><span class="p">).</span><span class="n">squeeze</span><span class="p">())</span>
+        <span class="n">out_xr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">"band"</span><span class="p">]</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span>
+     
+    <span class="k">return</span> <span class="n">xr</span><span class="p">.</span><span class="n">concat</span><span class="p">(</span><span class="n">out_xr</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s">"band"</span><span class="p">)</span> 
+
+<span class="n">landsat_paths_pre_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">"cold-springs-fire"</span><span class="p">,</span>
+                                      <span class="s">"landsat_collect"</span><span class="p">,</span>
+                                      <span class="s">"LC080340322016070701T1-SC20180214145604"</span><span class="p">,</span>
+                                      <span class="s">"crop"</span><span class="p">,</span>
+                                      <span class="s">"*band[2-5]*.tif"</span><span class="p">)</span>
+
+<span class="n">landsat_paths_pre</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">landsat_paths_pre_path</span><span class="p">)</span>
+<span class="n">landsat_paths_pre</span><span class="p">.</span><span class="n">sort</span><span class="p">()</span>
+
+<span class="n">landsat_pre</span> <span class="o">=</span> <span class="n">combine_tifs</span><span class="p">(</span><span class="n">landsat_paths_pre</span><span class="p">)</span>
+
+<span class="n">ep</span><span class="p">.</span><span class="n">plot_rgb</span><span class="p">(</span><span class="n">landsat_pre</span><span class="p">.</span><span class="n">values</span><span class="p">,</span>
+            <span class="n">rgb</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="n">title</span><span class="o">=</span><span class="s">"Landsat True Color Composite Image | 30 meters </span><span class="se">\n</span><span class="s"> Post Cold Springs Fire </span><span class="se">\n</span><span class="s"> July 8, 2016"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/05-multi-spectral-remote-sensing-python/landsat/2020-03-02-landsat-multispectral-03-landsat-cloud-masks/2020-03-02-landsat-multispectral-03-landsat-cloud-masks_4_0.png" alt="RGB Landsat image for the Cold Springs fire area with a cloud blocking part of the image." />
+<figcaption>RGB Landsat image for the Cold Springs fire area with a cloud blocking part of the image.</figcaption>
+
+</figure>
+
+<p>Notice in the data above there is a large cloud in your scene. This cloud will impact any quantitative analysis that you perform on the data. You can remove cloudy pixels using a mask. Masking “bad” pixels:</p>
+
+<ol>
+  <li>Allows you to remove them from any quantitative analysis that you may perform such as calculating NDVI.</li>
+  <li>Allows you to replace them (if you want) with better pixels from another scene. This replacement if often performed when performing time series analysis of data. The following lesson will teach you have to replace pixels in a scene.</li>
+</ol>
+
+<h2 id="cloud-masks-in-python">Cloud Masks in Python</h2>
+
+<p>You can use the cloud mask layer to identify pixels that are likely to be clouds
+or shadows. You can then set those pixel values to <code class="highlighter-rouge">masked</code> so they are not included in
+your quantitative analysis in Python.</p>
+
+<p>When you say “mask”, you are talking about a layer that “turns off” or sets to <code class="highlighter-rouge">nan</code>,
+the values of pixels in a raster that you don’t want to include in an analysis.
+It’s very similar to setting data points that equal -9999 to <code class="highlighter-rouge">nan</code> in a time series
+data set. You are just doing it with spatial raster data instead.</p>
+
+<figure>
+    <a href="http://localhost:4000/images/earth-analytics/raster-data/raster_masks.jpg">
+    <img src="http://localhost:4000/images/earth-analytics/raster-data/raster_masks.jpg" alt="Raster masks" />
+    </a>
+
+    <figcaption>When you use a raster mask, you are defining what pixels you want to exclude from a quantitative analysis. Notice in this image, the raster max is simply a layer that contains values of 1 (use these pixels) and values of NA (exclude these pixels). If the raster is the same extent and spatial resolution as your remote sensing data (in this case your landsat raster stack) you can then mask ALL PIXELS that occur at the spatial location of clouds and shadows (represented by an NA in the image above). Source: Colin Williams (NEON)
+    </figcaption>
+</figure>
+
+<p>The code below demonstrated how to mask a landsat scene using the pixel_qa layer.</p>
+
+<h2 id="raster-masks-for-remote-sensing-data">Raster Masks for Remote Sensing Data</h2>
+
+<p>Many remote sensing data sets come with quality layers that you can use as a mask 
+to remove “bad” pixels from your analysis. In the case of Landsat, the mask layers
+identify pixels that are likely representative of cloud cover, shadow and even water. 
+When you download Landsat 8 data from Earth Explorer, the data came with a processed 
+cloud shadow / mask raster layer called <code class="highlighter-rouge">landsat_file_name_pixel_qa.tif</code>.
+Just replace the name of your Landsat scene with the text landsat_file_name above. 
+For this class the layer is:</p>
+
+<p><code class="highlighter-rouge">LC80340322016189-SC20170128091153/crop/LC08_L1TP_034032_20160707_20170221_01_T1_pixel_qa_crop.tif</code></p>
+
+<p>You will explore using this pixel quality assurance (QA) layer, next. To begin, open
+the <code class="highlighter-rouge">pixel_qa</code> layer using rioxarray and plot it with matplotlib.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Open the landsat qa layer
+</span><span class="n">landsat_pre_cl_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">"cold-springs-fire"</span><span class="p">,</span>
+                                   <span class="s">"landsat_collect"</span><span class="p">,</span>
+                                   <span class="s">"LC080340322016070701T1-SC20180214145604"</span><span class="p">,</span>
+                                   <span class="s">"crop"</span><span class="p">,</span>
+                                   <span class="s">"LC08_L1TP_034032_20160707_20170221_01_T1_pixel_qa_crop.tif"</span><span class="p">)</span>
+
+<span class="n">landsat_qa</span> <span class="o">=</span> <span class="n">rxr</span><span class="p">.</span><span class="n">open_rasterio</span><span class="p">(</span><span class="n">landsat_pre_cl_path</span><span class="p">).</span><span class="n">squeeze</span><span class="p">()</span>
+
+<span class="n">high_cloud_confidence</span> <span class="o">=</span> <span class="n">em</span><span class="p">.</span><span class="n">pixel_flags</span><span class="p">[</span><span class="s">"pixel_qa"</span><span class="p">][</span><span class="s">"L8"</span><span class="p">][</span><span class="s">"High Cloud Confidence"</span><span class="p">]</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">em</span><span class="p">.</span><span class="n">pixel_flags</span><span class="p">[</span><span class="s">"pixel_qa"</span><span class="p">][</span><span class="s">"L8"</span><span class="p">][</span><span class="s">"Cloud"</span><span class="p">]</span>
+<span class="n">cloud_shadow</span> <span class="o">=</span> <span class="n">em</span><span class="p">.</span><span class="n">pixel_flags</span><span class="p">[</span><span class="s">"pixel_qa"</span><span class="p">][</span><span class="s">"L8"</span><span class="p">][</span><span class="s">"Cloud Shadow"</span><span class="p">]</span>
+
+<span class="n">all_masked_values</span> <span class="o">=</span> <span class="n">cloud_shadow</span> <span class="o">+</span> <span class="n">cloud</span> <span class="o">+</span> <span class="n">high_cloud_confidence</span>
+<span class="c1"># Call the earthpy mask function using pixel QA layer
+</span><span class="n">landsat_pre_cl_free</span> <span class="o">=</span> <span class="n">landsat_pre</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="o">~</span><span class="n">landsat_qa</span><span class="p">.</span><span class="n">isin</span><span class="p">(</span><span class="n">all_masked_values</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>First, plot the pixel_qa layer in matplotlib.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This is optional code to plot the qa layer - don't worry too much about the details.
+# Create a colormap with 11 colors
+</span><span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">cm</span><span class="p">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s">'tab20b'</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="c1"># Get a list of unique values in the qa layer
+</span><span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">unique</span><span class="p">(</span><span class="n">landsat_qa</span><span class="p">).</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">vals</span>
+<span class="c1"># Normalize the colormap
+</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">[((</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">1</span><span class="p">])]</span> <span class="o">+</span> \
+    <span class="p">[(</span><span class="n">bins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bins</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="n">bins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">colors</span><span class="p">.</span><span class="n">BoundaryNorm</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">cmap</span><span class="p">.</span><span class="n">N</span><span class="p">)</span>
+
+<span class="c1"># Plot the data
+</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">landsat_qa</span><span class="p">,</span>
+               <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+               <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+
+<span class="n">ep</span><span class="p">.</span><span class="n">draw_legend</span><span class="p">(</span><span class="n">im</span><span class="p">,</span>
+               <span class="n">classes</span><span class="o">=</span><span class="n">vals</span><span class="p">,</span>
+               <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">titles</span><span class="o">=</span><span class="n">vals</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Landsat Collection Quality Assessment Layer"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/05-multi-spectral-remote-sensing-python/landsat/2020-03-02-landsat-multispectral-03-landsat-cloud-masks/2020-03-02-landsat-multispectral-03-landsat-cloud-masks_14_0.png" alt="Landsat Collection Pixel QA layer for the Cold Springs fire area." />
+<figcaption>Landsat Collection Pixel QA layer for the Cold Springs fire area.</figcaption>
+
+</figure>
+
+<p>In the image above, you can see the cloud and the shadow that is obstructing our landsat image.
+Unfortunately for you, this cloud covers a part of your analysis area in the Cold Springs
+Fire location. There are a few ways to handle this issue. We will look at one:
+simply masking out or removing the cloud for your analysis, first.</p>
+
+<p>To remove all pixels that are cloud and cloud shadow covered we need to first
+determine what each value in our qa raster represents. The table below is from the USGS landsat website.
+It describes what all of the values in the pixel_qa layer represent.</p>
+
+<p>We are interested in</p>
+
+<ol>
+  <li>cloud shadow</li>
+  <li>cloud and</li>
+  <li>high confidence cloud</li>
+</ol>
+
+<p>Note that your specific analysis may require a different set of masked pixels. For instance, your analysis may 
+require you identify pixels that are low confidence clouds too. We are just using these classes
+for the purpose of this class.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Attribute</th>
+      <th>Pixel Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Fill</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Clear</td>
+      <td>322, 386, 834, 898, 1346</td>
+    </tr>
+    <tr>
+      <td>Water</td>
+      <td>324, 388, 836, 900, 1348</td>
+    </tr>
+    <tr>
+      <td>Cloud Shadow</td>
+      <td>328, 392, 840, 904, 1350</td>
+    </tr>
+    <tr>
+      <td>Snow/Ice</td>
+      <td>336, 368, 400, 432, 848, 880, 912, 944, 1352</td>
+    </tr>
+    <tr>
+      <td>Cloud</td>
+      <td>352, 368, 416, 432, 480, 864, 880, 928, 944, 992</td>
+    </tr>
+    <tr>
+      <td>Low confidence cloud</td>
+      <td>322, 324, 328, 336, 352, 368, 834, 836, 840, 848, 864, 880</td>
+    </tr>
+    <tr>
+      <td>Medium confidence cloud</td>
+      <td>386, 388, 392, 400, 416, 432, 900, 904, 928, 944</td>
+    </tr>
+    <tr>
+      <td>High confidence cloud</td>
+      <td>480, 992</td>
+    </tr>
+    <tr>
+      <td>Low confidence cirrus</td>
+      <td>322, 324, 328, 336, 352, 368, 386, 388, 392, 400, 416, 432, 480</td>
+    </tr>
+    <tr>
+      <td>High confidence cirrus</td>
+      <td>834, 836, 840, 848, 864, 880, 898, 900, 904, 912, 928, 944, 992</td>
+    </tr>
+    <tr>
+      <td>Terrain occlusion</td>
+      <td>1346, 1348, 1350, 1352</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>To better understand the values above, create a better map of the data. To do that you will:</p>
+
+<ol>
+  <li>classify the data into x classes where x represents the total number of unique values in the <code class="highlighter-rouge">pixel_qa</code> raster.</li>
+  <li>plot the data using these classes.</li>
+</ol>
+
+<p>We are reclassifying the data because matplotlib colormaps will assign colors to values along a continuous gradient.
+Reclassifying the data allows us to enforce one color for each unique value in our data.</p>
+
+<p>This next section shows you how to create a mask using the xarray function <code class="highlighter-rouge">isin()</code> to create a binary cloud mask layer. In this mask all pixels that you wish to remove from your analysis or mask will be set to <code class="highlighter-rouge">1</code>. All other pixels which represent pixels you want to use in your analysis will be set to <code class="highlighter-rouge">0</code>.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vals</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[322, 324, 328, 352, 386, 416, 480, 834, 864, 928, 992]
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># You can grab the cloud pixel values from earthpy
+</span><span class="n">high_cloud_confidence</span> <span class="o">=</span> <span class="n">em</span><span class="p">.</span><span class="n">pixel_flags</span><span class="p">[</span><span class="s">"pixel_qa"</span><span class="p">][</span><span class="s">"L8"</span><span class="p">][</span><span class="s">"High Cloud Confidence"</span><span class="p">]</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">em</span><span class="p">.</span><span class="n">pixel_flags</span><span class="p">[</span><span class="s">"pixel_qa"</span><span class="p">][</span><span class="s">"L8"</span><span class="p">][</span><span class="s">"Cloud"</span><span class="p">]</span>
+<span class="n">cloud_shadow</span> <span class="o">=</span> <span class="n">em</span><span class="p">.</span><span class="n">pixel_flags</span><span class="p">[</span><span class="s">"pixel_qa"</span><span class="p">][</span><span class="s">"L8"</span><span class="p">][</span><span class="s">"Cloud Shadow"</span><span class="p">]</span>
+
+<span class="n">all_masked_values</span> <span class="o">=</span> <span class="n">cloud_shadow</span> <span class="o">+</span> <span class="n">cloud</span> <span class="o">+</span> <span class="n">high_cloud_confidence</span>
+<span class="n">all_masked_values</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[328,
+ 392,
+ 840,
+ 904,
+ 1350,
+ 352,
+ 368,
+ 416,
+ 432,
+ 480,
+ 864,
+ 880,
+ 928,
+ 944,
+ 992,
+ 480,
+ 992]
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This is using a the isin function to create a binary cloud mask
+# You don't need to do this in your workflow as you can perform the mask in one step
+# But we have it here for demonstration purposes
+</span><span class="n">cl_mask</span> <span class="o">=</span> <span class="n">landsat_qa</span><span class="p">.</span><span class="n">isin</span><span class="p">(</span><span class="n">all_masked_values</span><span class="p">)</span>
+<span class="n">np</span><span class="p">.</span><span class="n">unique</span><span class="p">(</span><span class="n">cl_mask</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([False,  True])
+</code></pre></div></div>
+
+<p>Below is the plot of the reclassified raster mask created from the <code class="highlighter-rouge">_create_mask</code> helper function.</p>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/05-multi-spectral-remote-sensing-python/landsat/2020-03-02-landsat-multispectral-03-landsat-cloud-masks/2020-03-02-landsat-multispectral-03-landsat-cloud-masks_28_0.png" alt="Landsat image in which the masked pixels (cloud) are rendered in light purple." />
+<figcaption>Landsat image in which the masked pixels (cloud) are rendered in light purple.</figcaption>
+
+</figure>
+
+<h2 id="what-does-the-metadata-tell-you">What Does the Metadata Tell You?</h2>
+
+<p>You just explored two layers that potentially have information about cloud cover.
+However what do the values stored in those rasters mean? You can refer to the
+metadata provided by USGS to learn more about how
+each layer in your landsat dataset are both stored and calculated.</p>
+
+<p>When you download remote sensing data, often (but not always), you will find layers
+that tell us more about the error and uncertainty in the data. Often whomever
+created the data will do some of the work for us to detect where clouds and
+shadows are - given they are common challenges that you need to work around when
+using remote sensing data.</p>
+
+<h3 id="create-mask-layer-in-python">Create Mask Layer in Python</h3>
+
+<p>To create the mask this you do the following:</p>
+
+<ol>
+  <li>Make sure you use a raster layer for the mask that is the SAME EXTENT and the same pixel resolution as your landsat scene. In this case you have a mask layer that is already the same spatial resolution and extent as your landsat scene.</li>
+  <li>Set all of the values in that layer that are clouds and / or shadows to <code class="highlighter-rouge">True</code></li>
+  <li>Finally you use the <code class="highlighter-rouge">where</code> function to apply the mask layer to the xarray DataArray (or the landsat scene that you are working with in Python).  all pixel locations that were flagged as clouds or shadows in your mask to <code class="highlighter-rouge">NA</code> in your <code class="highlighter-rouge">raster</code> or in this case <code class="highlighter-rouge">rasterstack</code>.</li>
+</ol>
+
+<h2 id="mask-a-landsat-scene-using-xarray">Mask A Landsat Scene Using Xarray</h2>
+<p>Below you mask your data in one single step. This function <code class="highlighter-rouge">.where()</code> applies the mask you created above to your xarray DataArray. To apply the mask, ensure you put a <code class="highlighter-rouge">~</code> in front of your mask inside the <code class="highlighter-rouge">where()</code> function. This must be done because <code class="highlighter-rouge">isin()</code> creates the mask with <code class="highlighter-rouge">True</code> values where we want <code class="highlighter-rouge">False</code>, values, and vice versa. The <code class="highlighter-rouge">~</code> flips all of the values inside the array.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Call the earthpy mask function using your mask layer
+</span><span class="n">landsat_pre_cl_free</span> <span class="o">=</span> <span class="n">landsat_pre</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="o">~</span><span class="n">cl_mask</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Alternatively, you can directly input your mask values and the pixel QA layer into the <code class="highlighter-rouge">mask_pixels</code> function. This is the easiest way to mask your data! Again, this function only takes numpy arrays, so make sure to call <code class="highlighter-rouge">.values</code> on all of your xarray DataArrays that you are using as inputs into that function.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Call the earthpy mask function using pixel QA layer
+</span><span class="n">landsat_pre_cl_free</span> <span class="o">=</span> <span class="n">landsat_pre</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="o">~</span><span class="n">landsat_qa</span><span class="p">.</span><span class="n">isin</span><span class="p">(</span><span class="n">all_masked_values</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Plot the data
+</span><span class="n">ep</span><span class="p">.</span><span class="n">plot_bands</span><span class="p">(</span><span class="n">landsat_pre_cl_free</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+              <span class="n">cmap</span><span class="o">=</span><span class="s">"Greys"</span><span class="p">,</span>
+              <span class="n">title</span><span class="o">=</span><span class="s">"Landsat Infrared Band | 30 meters </span><span class="se">\n</span><span class="s"> Post Cold Springs Fire </span><span class="se">\n</span><span class="s"> July 8, 2016"</span><span class="p">,</span>
+              <span class="n">cbar</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/05-multi-spectral-remote-sensing-python/landsat/2020-03-02-landsat-multispectral-03-landsat-cloud-masks/2020-03-02-landsat-multispectral-03-landsat-cloud-masks_35_0.png" alt="CIR Composite image in grey scale with mask applied, covering the post-Cold Springs fire area on July 8, 2016." />
+<figcaption>CIR Composite image in grey scale with mask applied, covering the post-Cold Springs fire area on July 8, 2016.</figcaption>
+
+</figure>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Plot data
+# Masking out NA values with numpy in order to plot with ep.plot_rgb
+</span><span class="n">landsat_pre_cl_free_plot</span> <span class="o">=</span> <span class="n">ma</span><span class="p">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">landsat_pre_cl_free</span><span class="p">.</span><span class="n">values</span><span class="p">,</span> <span class="n">landsat_pre_cl_free</span><span class="p">.</span><span class="n">isnull</span><span class="p">())</span>
+
+<span class="c1"># Plot
+</span><span class="n">ep</span><span class="p">.</span><span class="n">plot_rgb</span><span class="p">(</span><span class="n">landsat_pre_cl_free_plot</span><span class="p">,</span>
+            <span class="n">rgb</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="n">title</span><span class="o">=</span><span class="s">"Landsat CIR Composite Image | 30 meters </span><span class="se">\n</span><span class="s"> Post Cold Springs Fire </span><span class="se">\n</span><span class="s"> July 8, 2016"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/05-multi-spectral-remote-sensing-python/landsat/2020-03-02-landsat-multispectral-03-landsat-cloud-masks/2020-03-02-landsat-multispectral-03-landsat-cloud-masks_36_0.png" alt="CIR Composite image with cloud mask applied, covering the post-Cold Springs fire area on July 8, 2016." />
+<figcaption>CIR Composite image with cloud mask applied, covering the post-Cold Springs fire area on July 8, 2016.</figcaption>
+
+</figure>
+
+
+          
+
+        
+
+        <!-- if the page is a course lesson, add pagination -->
+
+        
+         <!-- This is clunky code that forces pagination across lesson sets -->
+<!-- NOTE: it won't include slideshows as written which makes sense -->
+<!-- add forced pagination -->
+<!-- first, get total lesson count -->
+
+<div class="previous--next">
+
+
+
+
+
+<!-- if it's page one - then no previous button -->
+<!-- how do i figure out the link? i have to loop through again? -->
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+       <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/replace-raster-cell-values-in-remote-sensing-images-in-python/" class="btn btn--info btn--large btn-success" style="float:right" >
+         Replace Raster Cell Values
+         <i class="fa fa-4 fa-arrow-circle-right" aria-hidden="true"></i></a>
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+        <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/open-and-crop-data/" class="btn btn--info btn--large btn-success">
+          <i class="fa fa-4 fa-arrow-circle-left fa-4" aria-hidden="true"></i>
+          Open & Crop Landsat Data </a>
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags
+  
+  <span class="a-main-tag">
+  <i class="fa fa-fw fa-tag" aria-hidden="true"></i><a href=http://localhost:4000/tags/remote-sensing/>Remote sensing</a>:
+  </span>
+  
+    
+    <a href=http://localhost:4000/tags/remote-sensing/landsat/>landsat</a> 
+    
+    , 
+  
+    
+    <a href=http://localhost:4000/tags/remote-sensing/modis/>modis</a> 
+    
+    
+  
+
+  <span class="a-main-tag">
+  <i class="fa fa-fw fa-tag" aria-hidden="true"></i><a href=http://localhost:4000/tags/earth-science/>Earth science</a>:
+  </span>
+  
+    
+    <a href=http://localhost:4000/tags/earth-science/fire/>fire</a> 
+    
+    
+  
+
+  <span class="a-main-tag">
+  <i class="fa fa-fw fa-tag" aria-hidden="true"></i><a href=http://localhost:4000/tags/reproducible-science-and-programming/>Reproducible science and programming</a>:
+  </span>
+  
+    
+    <a href=http://localhost:4000/tags/reproducible-science-and-programming/python/>python</a> 
+    
+    
+  
+
+  <span class="a-main-tag">
+  <i class="fa fa-fw fa-tag" aria-hidden="true"></i><a href=http://localhost:4000/tags/spatial-data-and-gis/>Spatial data and gis</a>:
+  </span>
+  
+    
+    <a href=http://localhost:4000/tags/spatial-data-and-gis/raster-data/>raster data</a> 
+    
+    
+  
+
+
+
+
+
+
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-02-12">February 12, 2021</time></p>
+        
+        <!-- Add license information w/ DOI to the bottom -->
+        
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+      </footer>
+
+      
+
+
+<section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/remove-clouds-from-landsat-data/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/remove-clouds-from-landsat-data/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/remove-clouds-from-landsat-data/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/remove-clouds-from-landsat-data/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+<br><br>
+  <a href="http://bit.ly/2jc5SXy" target="_blank">
+    <img src="http://localhost:4000/images/earth-data-analytics-professional-certificate-banner.png" alt="Get a professional Certificate in Earth Data Analytics at University of Colorado, Boulder" width="40%"></a>
+</section>
+
+
+       
+    </div>
+
+    
+      
+
+
+<div class="page__comments">
+  <h4 class="page__comments-title">Leave a Comment</h4>
+  
+    <section id="disqus_thread"></section>
+  
+</div>
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      
+        <h4 class="page__related-title">You May Also Enjoy</h4>
+      
+      <div class="grid__wrapper">
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/earth-analytics-bootcamp/plot-data-python">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">Plot Data With Matplotlib
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  1 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">
+
+     This Week
+
+  
+
+
+</p>
+    </article>
+  </a>
+</div>
+
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/summarize-climate-data-by-season/">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">Calculate Seasonal Summary Values from Climate Data Variables Stored in NetCDF 4 Format: Work With MACA v2 Climate Data in Python
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  25 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">Learn how to calculate seasonal summary values for MACA 2 climate data using xarray and region mask in open source Python.
+</p>
+    </article>
+  </a>
+</div>
+
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/subset-netcdf4-climate-data-spatially-aoi/">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">Calculate Summary Values Using Spatial Areas of Interest (AOIs) including Shapefiles for Climate Data Variables Stored in NetCDF 4 Format: Work With MACA v2 Climate Data in Python
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  33 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">Climate datasets stored in netcdf 4 format often cover the entire globe or an entire country. Learn how to subset climate data spatially and by time slices u...</p>
+    </article>
+  </a>
+</div>
+
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/use-netcdf-in-python-xarray/">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">How to Open and Process NetCDF 4 Data Format in Open Source Python
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  26 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">Historic and projected climate data are most often stored in netcdf 4 format. Learn how to open and process MACA version 2 climate data for the Continental U...</p>
+    </article>
+  </a>
+</div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+
+
+<!-- Adding analytics code -->
+
+        
+
+
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    <li>
+      <strong>&copy; 2021 Earth Lab -
+      <a href="http://localhost:4000/license"> All materials on this site
+        are subject to the CC BY-NC-ND 4.0 License. </a>
+      </strong>
+    </li>
+  </ul>
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/earthlabcu"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+    
+      <li><a href="http://github.com/earthlab"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<!--
+<div class="page__footer-copyright">Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+-->
+
+      </footer>
+    </div>
+
+    <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+
+
+
+  
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'earthlabcu';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+<script type="text/javascript"
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-84081999-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+
+  </body>
+</html>
+

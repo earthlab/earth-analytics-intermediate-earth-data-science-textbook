@@ -1,0 +1,4349 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+
+
+<meta charset="utf-8">
+
+
+
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>Use Twitter Data to Explore the 2013 Colorado Flood Using Open Source Python | Earth Data Science - Earth Lab </title>
+
+
+
+
+
+
+
+<meta property="og:locale" content="en-US">
+<meta property="og:site_name" content="Earth Data Science - Earth Lab">
+<meta property="og:title" content="Use Twitter Data to Explore the 2013 Colorado Flood Using Open Source Python">
+
+
+  <link rel="canonical" href="http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/json-colorado-flood-twitter-data/">
+  <meta property="og:url" content="http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/json-colorado-flood-twitter-data/">
+
+
+
+  <meta content="In this lesson you will learn how to parse a JSON file containing twitter data to better understand the 2013 Colorado Floods using Open Source Python tools." name="description">
+  <meta property="og:description" content="In this lesson you will learn how to parse a JSON file containing twitter data to better understand the 2013 Colorado Floods using Open Source Python tools.">
+
+
+<!-- twitter cards -->
+
+  <meta name="twitter:site" content="@earthlabcu">
+  <meta name="twitter:title" content="Use Twitter Data to Explore the 2013 Colorado Flood Using Open Source Python">
+  <meta name="twitter:description" content="In this lesson you will learn how to parse a JSON file containing twitter data to better understand the 2013 Colorado Floods using Open Source Python tools.">
+  <meta name="twitter:url" content="http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/json-colorado-flood-twitter-data/">
+
+  
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:image" content="https://earthdatascience.org/images/earth_sm_twit.png">
+    <meta name="twitter:image:alt" content="The Earthlab Logo - image of a globe with courses, lessons and tutorials">
+
+    
+  
+
+  
+
+
+
+  
+
+  
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2020-03-25T00:00:00-06:00">
+  
+    <link rel="next" href="http://localhost:4000/courses/intro-to-earth-data-science/file-formats/use-spatial-data/" title="Spatial Data Formats for Earth Data Science">
+  
+  
+    <link rel="prev" href="http://localhost:4000/courses/earth-analytics-python/using-apis-natural-language-processing-twitter/" title="Programmatic Data Access">
+  
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "Earth Analytics",
+      "url" : "http://localhost:4000",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Earth Data Science - Earth Lab Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-site-verification" content="LfpevjsE0wlELv5KKOZv1T2RhRimGSiRckWv5ZC19GU" />
+<!-- don't use the old cataloged meta tags -->
+<meta name="googlebot" content="noodp">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+
+<!-- For all browsers
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">-->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
+
+    <script src="http://localhost:4000/assets/js/copy-code.js"></script>
+  </head>
+
+  <body>
+
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    
+
+<!-- search bar begin  - turning off for now-->
+
+<div class="search">
+<form role="search" method="get" action="http://localhost:4000/search/">
+    <input id="q" name="q"
+           placeholder="Search earth data science site" type="text">
+</form>
+<!--<span class='cu-boulder'><a href="http://www.colorado.edu/earthlab" target="_blank">Earth Lab University of Colorado - Boulder Home </a></span> -->
+</div>
+
+
+<!-- search bar END -->
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <button><div class="navicon"></div></button>
+        <ul class="visible-links">
+          <li class="masthead__menu-item masthead__menu-item--lg"><a href="http://localhost:4000/"><img src="/images/earth-lab-logo.png" alt="Earth Lab - Earth Data Science" style="height:80%;width:85%"></a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/tutorials/">Tutorials</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/courses/">Courses</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/workshops/">Workshops</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/tools/">Tools</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/blog/">Blog</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/about/">About</a></li>
+          
+
+        </ul>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    
+
+
+
+  <div class="page__hero--overlay" style=" background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('http://localhost:4000/images/header-images/earth-data-analytics-professional-certificate-banner.jpg');">
+  <div class="wrapper">
+        <h1 class="page__title" itemprop="headline">
+          Earth Data Analytics Online Certificate
+        </h1>
+        <p><a href="http://bit.ly/2jc5SXy" target = "_blank" class="btn btn--light-outline btn--large">Enroll now! Learn more.</a></p>
+  </div>
+</div>
+
+
+
+
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="breadcrumbs" role="menubar" aria-label="breadcrumbs">
+ <ol itemscope itemtype="http://schema.org/BreadcrumbList">
+ <a href="http://localhost:4000"></a>
+ 
+ 
+ <!-- there is an offset of 1 so subtract 2 from the final crumb number-->
+ 
+   
+   
+     <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+       <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+       <meta itemprop="position" content="1" />
+     </li>
+     <span class="sep">/</span>
+   
+    
+        
+        <li><a href="http://localhost:4000/courses/">Courses </a>
+        <meta itemprop="position" content="2" />
+        <span class="sep">/</span></li>
+    
+  
+   
+    
+        
+        <li><a href="http://localhost:4000/courses/use-data-open-source-python/">Use data open source python </a>
+        <meta itemprop="position" content="3" />
+        <span class="sep">/</span></li>
+    
+  
+   
+    
+        
+        <li><a href="http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/">Intro to apis </a>
+        <meta itemprop="position" content="4" />
+        <span class="sep">/</span></li>
+    
+  
+   
+    
+        <li class="current">Use Twitter Data to Explore the 2013 Colorado Flood Using Open Source Python</li>
+    
+  
+</ol>
+</nav>
+
+<!-- from min mistakes -->
+
+
+
+
+  
+
+
+<div id="main" role="main">
+  
+
+
+
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+    
+    
+
+
+    
+
+    
+     <!--  Might be able to delete this This is the code that populates the side bar navigation if there is a class-->
+      
+
+
+
+
+
+
+
+<!-- make sure we're only grabbing pages for the course -->
+
+
+
+<!--<h3>Week 7 Lessons</h3>-->
+<!-- i don't think the code below is used as modules is defined lower down as well. -->
+
+<!-- This is how modules are sorted on the left hand side bar -->
+
+
+
+
+
+
+<h5><a href="http://localhost:4000/courses/intermediate-earth-data-science-textbook/" ><i class="fa fa-home" aria-hidden="true"></i> Intermediate earth data science textbook</a></h5>
+
+<!-- Just get the pages from this course -->
+
+
+
+
+
+
+<nav class="nav__list">
+
+
+
+
+
+
+
+<ul>
+  <li><span class="nav__sub-title"><i class="fa fa-book" aria-hidden="true"></i> Units</span>
+   <ul>
+
+       
+
+        
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 1 <a href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 TIME SERIES DATA IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/introduction-to-time-series-in-pandas-python/"> Chapter 1:   Time Series Data in Pandas </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/floods-return-period-and-probability/"> Chapter 1.5:   Flood Returns Period Analysis in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 2 <a href="http://localhost:4000/courses/use-data-open-source-python/intro-vector-data-python/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 INTRO TO SPATIAL VECTOR DATA IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-vector-data-python/spatial-data-vector-shapefiles/"> Chapter 2:   Spatial Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-vector-data-python/vector-data-processing/"> Chapter 3:   Processing Spatial Vector Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 3 <a href="http://localhost:4000/courses/use-data-open-source-python/intro-raster-data-python/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 INTRODUCTION TO RASTER DATA IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-raster-data-python/fundamentals-raster-data/"> Chapter 4:   Intro to Raster Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-raster-data-python/raster-data-processing/"> Chapter 5:   Processing Raster Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 4 <a href="http://localhost:4000/courses/use-data-open-source-python/spatial-data-applications/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 SPATIAL DATA APPLICATIONS IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/spatial-data-applications/lidar-remote-sensing-uncertainty/"> Chapter 6:   Uncertainty in Remote Sensing Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 5 <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 MULTISPECTRAL REMOTE SENSING DATA IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/intro-multispectral-data/"> Chapter 7:   Intro to Multispectral Remote Sensing Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/intro-naip/"> Chapter 8:   NAIP </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/"> Chapter 9:   Landsat Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/modis-data-in-python/"> Chapter 10:   MODIS Data </a>
+                                </li>
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/vegetation-indices-in-python/"> Chapter 11:   Calculate Vegetation Indices in Python </a>
+                                </li>
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 6 <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 INTRODUCTION TO HIERARCHICAL DATA FORMATS IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/intro-to-hdf4/"> Chapter 12:   HDF4 </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/intro-to-climate-data/"> Chapter 13:   NETCDF </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+                
+                    <li class='active-section'> <a href="http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/"><i class="fa fa-folder-open" aria-hidden="true"></i>
+                     7. INTRODUCTION TO API DATA ACCESS IN OPEN SOURCE PYTHON</a></li>
+
+            
+
+<div class='active-menu'>
+      <ul>
+        
+        <!-- Note that class-order allows you to sort modules by class order if there are more than 1 in a class -->
+        
+
+        
+
+        
+
+        
+        
+        <!-- If it's a textbook with a chapter number write "chapter", else assume it is a week -->
+
+          <li><span class="nav__sub-title grey"><i class="fa fa-caret-down" aria-hidden="true"></i>   Chapter 15 Apis  </span></li>
+        <ul>
+
+      
+      <!-- count lessons -->
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/apis-in-python/><!--7.1 --> - API Intro</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/intro-to-json/><!--7.2 --> - Intro to JSON</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/use-JSON-in-python/><!--7.3 --> - JSON Data in Python</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/spatial-data-using-apis/><!--7.4 --> - Geospatial Data From APIs</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+
+        
+       </ul>
+        
+
+        
+        
+        <!-- If it's a textbook with a chapter number write "chapter", else assume it is a week -->
+
+          <li><span class="nav__sub-title grey"><i class="fa fa-caret-down" aria-hidden="true"></i>   Chapter 16 Twitter data  </span></li>
+        <ul>
+
+      
+      <!-- count lessons -->
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/social-media-text-mining-python/><!--7.1 --> - Twitter Data for Science</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/twitter-data-in-python/><!--7.2 --> - Get Twitter Data</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/calculate-tweet-word-frequencies-in-python/><!--7.3 --> - Tweet Word Frequency Analysis</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/calculate-tweet-word-bigrams/><!--7.4 --> - Tweet Word Bigrams and Network Analysis</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/analyze-tweet-sentiment-in-python/><!--7.5 --> - Tweet Sentiment Analysis</a></li>
+          
+          
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/json-colorado-flood-twitter-data/ class='active'> <!--7.6 -->- CO Flood Tweets JSON</a></li>
+          
+          
+
+        
+       </ul>
+        
+
+        
+      </ul>
+
+      <!-- BEGIN Learn how to lessons -->
+       <ul>
+         
+         
+       </ul>
+
+
+     </div>
+
+
+      <!-- END BEGIN Learn how to lessons -->
+
+      <!--  -->
+      
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 8 <a href="http://localhost:4000/courses/use-data-open-source-python/earth-data-science-workflows/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 EARTH DATA SCIENCE WORKFLOWS</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/earth-data-science-workflows/design-efficient-automated-data-workflows/"> Chapter 12:   Design and Automate Data Workflows </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 9 <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 DATA STORIES</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/colorado-floods-2013/"> Chapter 20:   Flood overview  </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/what-is-lidar-data/"> Chapter 21:   Intro to Lidar Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/cold-springs-wildfire/"> Chapter 22:   Wildfire Overview </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+  </ul></li>
+ </ul>
+
+
+ <ul>
+   <li><span class="nav__sub-title"><i class="fa fa-folder-open" aria-hidden="true"></i> Overview</span>
+    <ul>
+     
+          
+         <li> <a href="http://localhost:4000/courses/use-data-open-source-python/">
+           Use Data for Earth and Environmental Science in Open Source Python Home </a></li>
+         
+
+     
+   </ul>
+ </li>
+</ul>
+</nav>
+
+<h5><a href="http://localhost:4000/courses/intermediate-earth-data-science-textbook/" ><i class="fa fa-home" aria-hidden="true"></i> intermediate-earth-data-science-textbook Home</a></h5>
+
+    
+
+    
+
+  
+  </div>
+
+
+
+
+
+
+<!-- begin science / science themes side bar nav -->
+
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+
+    <meta itemprop="headline" content="Use Twitter Data to Explore the 2013 Colorado Flood Using Open Source Python">
+    <meta itemprop="description" content="In this lesson you will learn how to parse a JSON file containing twitter data to better understand the 2013 Colorado Floods using Open Source Python tools.">
+    <meta itemprop="datePublished" content="March 25, 2020">
+    <meta itemprop="dateModified" content="September 11, 2020">
+
+    <div class="page__inner-wrap">
+        <header>
+          
+
+          <!-- BEGIN: insert a welcome to the module block on pages that are part of a module set -->
+
+          <!-- END: insert welcome block -->
+
+          
+              
+
+            
+                <h1 class="page__title" itemprop="headline">
+                Lesson 6. 
+                 Use Twitter Data to Explore the 2013 Colorado Flood Using Open Source Python
+
+                
+                </h1>
+            
+
+          
+
+          
+            <div class="page__meta">
+              
+              
+              <a href="http://localhost:4000/authors/leah-wasser">Leah Wasser</a>, 
+              
+              
+              <a href="http://localhost:4000/authors/jenny-palomino">Jenny Palomino</a>
+              
+            </div>
+          
+
+            <br/>
+
+            
+
+              
+            
+
+            <!-- For tools pages add authors and tool title -->
+
+            
+        </header>
+
+
+
+      <section class="page__content" itemprop="text">
+
+        <!-- would like to include the TOC automatically but this does weird things-->
+        
+          
+            <aside class="sidebar__right">
+<nav class="toc">
+    <header><h4 class="nav__title"><i class="fa fa-file-text"></i> In This Lesson</h4></header>
+<ul class="toc__menu" id="markdown-toc">
+  <li><a href="#learning-objectives" id="markdown-toc-learning-objectives"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Learning Objectives</a></li>
+  <li><a href="#what-you-need" id="markdown-toc-what-you-need"><i class="fa fa-check-square-o fa-2" aria-hidden="true"></i> What You Need</a></li>
+  <li><a href="#process-a-json-file-with-twitter-data-in-python" id="markdown-toc-process-a-json-file-with-twitter-data-in-python">Process a JSON File with Twitter Data in Python</a></li>
+  <li><a href="#json-stored-as-python-dictionaries" id="markdown-toc-json-stored-as-python-dictionaries">Json Stored as Python Dictionaries</a></li>
+  <li><a href="#text-parsing-of-twitter-data" id="markdown-toc-text-parsing-of-twitter-data">Text Parsing of Twitter Data</a></li>
+  <li><a href="#collection-of-words--bigrams" id="markdown-toc-collection-of-words--bigrams">Collection of Words – Bigrams</a></li>
+  <li><a href="#analyze-sentiments-in-tweets" id="markdown-toc-analyze-sentiments-in-tweets">Analyze Sentiments in Tweets</a></li>
+</ul>
+
+  </nav>
+</aside>
+
+<div class="notice--success">
+
+  <h2 id="learning-objectives"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Learning Objectives</h2>
+
+  <p>After completing this tutorial, you will be able to:</p>
+
+  <ul>
+    <li>Learn how to process a <code class="highlighter-rouge">JSON</code> file with twitter data in Python</li>
+  </ul>
+
+  <h2 id="what-you-need"><i class="fa fa-check-square-o fa-2" aria-hidden="true"></i> What You Need</h2>
+
+  <p>You will need a computer with internet access to complete this lesson.</p>
+
+</div>
+
+<h2 id="process-a-json-file-with-twitter-data-in-python">Process a JSON File with Twitter Data in Python</h2>
+
+<p>In the previous lessons, you accessed twitter data using the Twitter API and Tweepy.
+In this lesson you will process a json file that contains twitter data in it.
+This will give you experience with using complex JSON files in Open Source Python.</p>
+
+<p>As always, you need to load a suite of libraries first.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">tweepy</span> <span class="k">as</span> <span class="n">tw</span>
+<span class="kn">import</span> <span class="nn">nltk</span>
+<span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+<span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">bigrams</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">textblob</span> <span class="kn">import</span> <span class="n">TextBlob</span>
+<span class="kn">import</span> <span class="nn">networkx</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="n">nx</span>
+<span class="kn">import</span> <span class="nn">earthpy</span> <span class="k">as</span> <span class="n">et</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="p">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s">"ignore"</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">set_style</span><span class="p">(</span><span class="s">"whitegrid"</span><span class="p">)</span>
+
+<span class="c1"># Get the already collected twitter data in JSON format
+</span><span class="n">et</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">'twitter-flood'</span><span class="p">)</span>
+
+<span class="c1"># Set working directory
+</span><span class="n">os</span><span class="p">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">et</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">HOME</span><span class="p">,</span> <span class="s">'earth-analytics'</span><span class="p">,</span> <span class="s">'data'</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/opt/conda/lib/python3.8/site-packages/nltk/parse/malt.py:206: SyntaxWarning: "is not" with a literal. Did you mean "!="?
+  if ret is not 0:
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Downloading from https://ndownloader.figshare.com/files/10960175
+</code></pre></div></div>
+
+<p>The data in this lesson were collected during the 2013 Colorado Flood event. 
+To begin, you create a path to open the data.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">flood_tweets_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">"twitter-flood"</span><span class="p">,</span> 
+                                 <span class="s">"boulder_flood_geolocated_tweets.json"</span><span class="p">)</span>
+<span class="n">flood_tweets_path</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'twitter-flood/boulder_flood_geolocated_tweets.json'
+</code></pre></div></div>
+
+<p>Next, you open the json file. You will have to create a for loop given the size
+and complexity of the file. This loop will iterate through each tweet and add
+it to a list. You can then use that list to process your data.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Loop through each tweet in the JSON file and append it to a list
+</span><span class="n">flood_tweets</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">flood_tweets_path</span><span class="p">,</span> <span class="s">'r'</span><span class="p">):</span>
+    <span class="n">flood_tweets</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+
+<span class="c1"># View a single tweet in your list.
+</span><span class="n">flood_tweets</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{'created_at': 'Tue Dec 31 18:49:31 +0000 2013',
+ 'id': 418091565161017345,
+ 'id_str': '418091565161017345',
+ 'text': '@WeatherDude17 Not that revved up yet due to model inconsistency. I\'d say 0-2" w/ a decent chance of &amp;gt;1" #snow #COwx #weather #Denver',
+ 'truncated': False,
+ 'entities': {'hashtags': [{'text': 'snow', 'indices': [108, 113]},
+   {'text': 'COwx', 'indices': [114, 119]},
+   {'text': 'weather', 'indices': [120, 128]},
+   {'text': 'Denver', 'indices': [129, 136]}],
+  'symbols': [],
+  'user_mentions': [{'screen_name': 'WeatherDude17',
+    'name': 'WeatherDude',
+    'id': 1214463582,
+    'id_str': '1214463582',
+    'indices': [0, 14]}],
+  'urls': []},
+ 'source': '&lt;a href="https://about.twitter.com/products/tweetdeck" rel="nofollow"&gt;TweetDeck&lt;/a&gt;',
+ 'in_reply_to_status_id': 418091408994471937,
+ 'in_reply_to_status_id_str': '418091408994471937',
+ 'in_reply_to_user_id': 1214463582,
+ 'in_reply_to_user_id_str': '1214463582',
+ 'in_reply_to_screen_name': 'WeatherDude17',
+ 'user': {'id': 164856599,
+  'id_str': '164856599',
+  'name': 'Josh Larson',
+  'screen_name': 'coloradowx',
+  'location': 'Denver, CO',
+  'description': "Bringing you weather information &amp; forecasts for the Denver metro area and Colorado. Previously worked at NOAA's CPC &amp; @capitalweather.",
+  'url': 'https://t.co/TFT5G0nnPh',
+  'entities': {'url': {'urls': [{'url': 'https://t.co/TFT5G0nnPh',
+      'expanded_url': 'http://www.weather5280.com',
+      'display_url': 'weather5280.com',
+      'indices': [0, 23]}]},
+   'description': {'urls': []}},
+  'protected': False,
+  'followers_count': 2181,
+  'friends_count': 458,
+  'listed_count': 199,
+  'created_at': 'Fri Jul 09 23:15:25 +0000 2010',
+  'favourites_count': 14777,
+  'utc_offset': -25200,
+  'time_zone': 'Mountain Time (US &amp; Canada)',
+  'geo_enabled': True,
+  'verified': False,
+  'statuses_count': 18024,
+  'lang': 'en',
+  'contributors_enabled': False,
+  'is_translator': False,
+  'is_translation_enabled': False,
+  'profile_background_color': 'C0DEED',
+  'profile_background_image_url': 'http://abs.twimg.com/images/themes/theme1/bg.png',
+  'profile_background_image_url_https': 'https://abs.twimg.com/images/themes/theme1/bg.png',
+  'profile_background_tile': False,
+  'profile_image_url': 'http://pbs.twimg.com/profile_images/910542678072238082/DYfwLSOF_normal.jpg',
+  'profile_image_url_https': 'https://pbs.twimg.com/profile_images/910542678072238082/DYfwLSOF_normal.jpg',
+  'profile_link_color': '1DA1F2',
+  'profile_sidebar_border_color': 'C0DEED',
+  'profile_sidebar_fill_color': 'DDEEF6',
+  'profile_text_color': '333333',
+  'profile_use_background_image': True,
+  'has_extended_profile': False,
+  'default_profile': True,
+  'default_profile_image': False,
+  'following': False,
+  'follow_request_sent': False,
+  'notifications': False,
+  'translator_type': 'none'},
+ 'geo': None,
+ 'coordinates': None,
+ 'place': None,
+ 'contributors': None,
+ 'is_quote_status': False,
+ 'retweet_count': 0,
+ 'favorite_count': 0,
+ 'favorited': False,
+ 'retweeted': False,
+ 'lang': 'en'}
+</code></pre></div></div>
+
+<h2 id="json-stored-as-python-dictionaries">Json Stored as Python Dictionaries</h2>
+
+<p>The data extracted from your json file are returned in Python as a dictionary.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">type</span><span class="p">(</span><span class="n">flood_tweets</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dict
+</code></pre></div></div>
+
+<p>A dictionary is a hierarchical Python data a format that allows you to store
+nested information. You can access elements of the dictionary using keys</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a_single_tweet</span> <span class="o">=</span> <span class="n">flood_tweets</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">a_single_tweet</span><span class="p">.</span><span class="n">keys</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dict_keys(['created_at', 'id', 'id_str', 'text', 'truncated', 'entities', 'source', 'in_reply_to_status_id', 'in_reply_to_status_id_str', 'in_reply_to_user_id', 'in_reply_to_user_id_str', 'in_reply_to_screen_name', 'user', 'geo', 'coordinates', 'place', 'contributors', 'is_quote_status', 'retweet_count', 'favorite_count', 'favorited', 'retweeted', 'lang'])
+</code></pre></div></div>
+
+<p>You can access a single key using the <code class="highlighter-rouge">["key-here"]</code> syntax.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># View the created at time stamp in the dictionary
+</span><span class="n">a_single_tweet</span><span class="p">[</span><span class="s">"created_at"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'Tue Dec 31 18:49:31 +0000 2013'
+</code></pre></div></div>
+
+<p>Nested keys can be accessed with multiple square brackets. 
+Above you select the hashtags from the tweet. Notice that the indices or 
+locations of the hashtag within the tweet text are included with this dictionary
+element. Also notice that you can access each index individually if you want.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a_single_tweet</span><span class="p">[</span><span class="s">"entities"</span><span class="p">][</span><span class="s">"hashtags"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[{'text': 'snow', 'indices': [108, 113]},
+ {'text': 'COwx', 'indices': [114, 119]},
+ {'text': 'weather', 'indices': [120, 128]},
+ {'text': 'Denver', 'indices': [129, 136]}]
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Get the second item in the list and it's associated hashtag
+</span><span class="n">a_single_tweet</span><span class="p">[</span><span class="s">"entities"</span><span class="p">][</span><span class="s">"hashtags"</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s">"text"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'COwx'
+</code></pre></div></div>
+
+<h2 id="text-parsing-of-twitter-data">Text Parsing of Twitter Data</h2>
+
+<p>Using what you have learned in the previous lessons, you will clean up the 
+data by:</p>
+
+<ol>
+  <li>removing URL’s</li>
+  <li>removing stop words and</li>
+  <li>removing additional words that may be throwing off your word counts</li>
+</ol>
+
+<p>To begin remove url’s from your tweets.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">remove_url_punctuation</span><span class="p">(</span><span class="n">txt</span><span class="p">):</span>
+    <span class="s">"""Replace URLs found in a text string with nothing 
+    (i.e. it will remove the URL from the string).
+
+    Parameters
+    ----------
+    txt : string
+        A text string that you want to parse and remove urls.
+
+    Returns
+    -------
+    The same txt string with url's removed.
+    """</span>
+    <span class="n">url_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span><span class="s">r'https?://\S+|www\.\S+'</span><span class="p">)</span>
+    <span class="n">no_url</span> <span class="o">=</span> <span class="n">url_pattern</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="s">r''</span><span class="p">,</span> <span class="n">txt</span><span class="p">)</span>
+    
+    <span class="n">punct_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span><span class="s">r'[^\w\s]'</span><span class="p">)</span>
+    <span class="n">no_punct</span> <span class="o">=</span> <span class="n">punct_pattern</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="s">r''</span><span class="p">,</span> <span class="n">no_url</span><span class="p">)</span>
+    
+    <span class="c1"># Clean up punctuation (including pound signs)
+</span>    <span class="k">return</span> <span class="n">no_punct</span>
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create a custom search term and define the number of tweets
+</span><span class="n">flood_tweets</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="s">"text"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'Story of my life! 😂 #boulder http://t.co/ZMfNKEl0xD'
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Remove URLs
+</span><span class="n">tweets_no_urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">remove_url_punctuation</span><span class="p">(</span><span class="n">atweet</span><span class="p">[</span><span class="s">"text"</span><span class="p">])</span> <span class="k">for</span> <span class="n">atweet</span> <span class="ow">in</span> <span class="n">flood_tweets</span><span class="p">]</span>
+<span class="n">tweets_no_urls</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'Story of my life  boulder '
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create a list of lists containing lowercase words for each tweet
+</span><span class="n">words_in_tweet</span> <span class="o">=</span> <span class="p">[</span><span class="n">tweet</span><span class="p">.</span><span class="n">lower</span><span class="p">().</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">tweet</span> <span class="ow">in</span> <span class="n">tweets_no_urls</span><span class="p">]</span>
+<span class="n">words_in_tweet</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>['story', 'of', 'my', 'life', 'boulder']
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># List of all words across tweets
+</span><span class="n">all_words_no_urls</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="p">.</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="n">words_in_tweet</span><span class="p">))</span>
+
+<span class="c1"># Count each word across all tweets - notice there are still stop words
+</span><span class="n">counts_no_urls</span> <span class="o">=</span> <span class="n">collections</span><span class="p">.</span><span class="n">Counter</span><span class="p">(</span><span class="n">all_words_no_urls</span><span class="p">)</span>
+<span class="n">counts_no_urls</span><span class="p">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[('rt', 7884),
+ ('boulder', 6980),
+ ('the', 6849),
+ ('in', 5730),
+ ('to', 5619),
+ ('cowx', 5338),
+ ('boulderflood', 5317),
+ ('of', 4778),
+ ('coflood', 4312),
+ ('a', 3240),
+ ('for', 3156),
+ ('and', 2823),
+ ('is', 2596),
+ ('at', 2330),
+ ('on', 2282)]
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Remove stop words and any other words you want to clean up
+</span><span class="n">nltk</span><span class="p">.</span><span class="n">download</span><span class="p">(</span><span class="s">'stopwords'</span><span class="p">)</span>
+<span class="n">stop_words</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">stopwords</span><span class="p">.</span><span class="n">words</span><span class="p">(</span><span class="s">'english'</span><span class="p">))</span>
+
+<span class="c1"># Remove stop words from each tweet list of words
+</span><span class="n">tweets_nsw</span> <span class="o">=</span> <span class="p">[[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">tweet_words</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">stop_words</span><span class="p">]</span>
+              <span class="k">for</span> <span class="n">tweet_words</span> <span class="ow">in</span> <span class="n">words_in_tweet</span><span class="p">]</span>
+
+<span class="c1"># Remove collection and other twitter related words (rt = retweet on twitter)
+</span><span class="n">collection_words</span> <span class="o">=</span> <span class="p">[</span><span class="s">'rt'</span><span class="p">]</span>
+<span class="n">tweets_nsw_nc</span> <span class="o">=</span> <span class="p">[[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">word</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">collection_words</span><span class="p">]</span>
+                 <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">tweets_nsw</span><span class="p">]</span>
+
+<span class="n">tweets_nsw_nc</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[nltk_data] Downloading package stopwords to /root/nltk_data...
+[nltk_data]   Package stopwords is already up-to-date!
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>['story', 'life', 'boulder']
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Process for word counts
+</span><span class="n">all_words_nsw</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="p">.</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="n">tweets_nsw_nc</span><span class="p">))</span>
+
+<span class="n">counts_nsw</span> <span class="o">=</span> <span class="n">collections</span><span class="p">.</span><span class="n">Counter</span><span class="p">(</span><span class="n">all_words_nsw</span><span class="p">)</span>
+
+<span class="n">clean_tweets_nsw</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">counts_nsw</span><span class="p">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span>
+                             <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">'words'</span><span class="p">,</span> <span class="s">'count'</span><span class="p">])</span>
+<span class="n">clean_tweets_nsw</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>words</th>
+      <th>count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>boulder</td>
+      <td>6980</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>cowx</td>
+      <td>5338</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>boulderflood</td>
+      <td>5317</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>coflood</td>
+      <td>4312</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>colorado</td>
+      <td>2237</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>denver</td>
+      <td>1480</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>flood</td>
+      <td>1285</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>snow</td>
+      <td>1202</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>amp</td>
+      <td>1202</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>weather</td>
+      <td>1070</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>creek</td>
+      <td>961</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>water</td>
+      <td>884</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>rain</td>
+      <td>804</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>today</td>
+      <td>734</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>dailycamera</td>
+      <td>716</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="c1"># Plot horizontal bar graph
+</span><span class="n">clean_tweets_nsw</span><span class="p">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s">'count'</span><span class="p">).</span><span class="n">plot</span><span class="p">.</span><span class="n">barh</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'words'</span><span class="p">,</span>
+                      <span class="n">y</span><span class="o">=</span><span class="s">'count'</span><span class="p">,</span>
+                      <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                      <span class="n">color</span><span class="o">=</span><span class="s">"purple"</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Common Words Found in Tweets (Without Stop Words)"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/07-apis-twitter/02-twitter-api/2020-03-25-twitter-06-boulder-flood-tweets/2020-03-25-twitter-06-boulder-flood-tweets_25_0.png" alt="Horizontal bar graph showing most common words found in tweets (without stop words)." />
+<figcaption>Horizontal bar graph showing most common words found in tweets (without stop words).</figcaption>
+
+</figure>
+
+<h2 id="collection-of-words--bigrams">Collection of Words – Bigrams</h2>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create list of lists containing bigrams in tweets
+</span><span class="n">terms_bigram</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">bigrams</span><span class="p">(</span><span class="n">tweet</span><span class="p">))</span> <span class="k">for</span> <span class="n">tweet</span> <span class="ow">in</span> <span class="n">tweets_nsw_nc</span><span class="p">]</span>
+
+<span class="c1"># Flatten list of bigrams in clean tweets
+</span><span class="n">coupled_words</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="p">.</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="n">terms_bigram</span><span class="p">))</span>
+
+<span class="c1"># Create counter of words in clean bigrams
+</span><span class="n">bigram_counts</span> <span class="o">=</span> <span class="n">collections</span><span class="p">.</span><span class="n">Counter</span><span class="p">(</span><span class="n">coupled_words</span><span class="p">)</span>
+
+<span class="n">bigram_counts</span><span class="p">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[(('cowx', 'weather'), 618),
+ (('boulder', 'colorado'), 457),
+ (('boulder', 'creek'), 436),
+ (('cowx', 'coflood'), 408),
+ (('boulderflood', 'cowx'), 287),
+ (('boulder', 'county'), 268),
+ (('boulderflood', 'coflood'), 256),
+ (('cowx', 'gjco'), 214),
+ (('boulder', 'boulderflood'), 199),
+ (('cowx', 'westernslope'), 192),
+ (('cowx', 'denver'), 189),
+ (('flash', 'flood'), 188),
+ (('boulder', 'canyon'), 185),
+ (('coflood', 'cowx'), 181),
+ (('wall', 'water'), 179),
+ (('coflood', 'boulderflood'), 164),
+ (('higher', 'ground'), 163),
+ (('dailycamera', 'boulder'), 156),
+ (('flood', 'warning'), 149),
+ (('boulder', 'co'), 144)]
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1"># Create a network plot of grouped terms
+</span><span class="n">bigram_df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">bigram_counts</span><span class="p">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+                             <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">'bigram'</span><span class="p">,</span> <span class="s">'count'</span><span class="p">])</span>
+
+<span class="c1"># Create dictionary of bigrams and their counts
+</span><span class="n">d</span> <span class="o">=</span> <span class="n">bigram_df</span><span class="p">.</span><span class="n">set_index</span><span class="p">(</span><span class="s">'bigram'</span><span class="p">).</span><span class="n">T</span><span class="p">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s">'records'</span><span class="p">)</span>
+
+<span class="c1"># Create network plot 
+</span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="n">Graph</span><span class="p">()</span>
+
+<span class="c1"># Create connections between nodes
+</span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">weight</span><span class="o">=</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="mi">10</span><span class="p">))</span>
+
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mf">5.5</span><span class="p">)</span>
+<span class="c1"># Plot networks
+</span><span class="n">nx</span><span class="p">.</span><span class="n">draw_networkx</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span>
+                 <span class="n">font_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+                 <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                 <span class="n">edge_color</span><span class="o">=</span><span class="s">'grey'</span><span class="p">,</span>
+                 <span class="n">node_color</span><span class="o">=</span><span class="s">'purple'</span><span class="p">,</span>
+                 <span class="n">with_labels</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
+                 <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+
+<span class="c1"># Create offset labels
+</span><span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">pos</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="p">.</span><span class="mi">135</span><span class="p">,</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="p">.</span><span class="mi">05</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+            <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s">'red'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">),</span>
+            <span class="n">horizontalalignment</span><span class="o">=</span><span class="s">'center'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+    
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/07-apis-twitter/02-twitter-api/2020-03-25-twitter-06-boulder-flood-tweets/2020-03-25-twitter-06-boulder-flood-tweets_29_0.png" alt="Network plot showing grouped terms found in the tweets." />
+<figcaption>Network plot showing grouped terms found in the tweets.</figcaption>
+
+</figure>
+
+<h2 id="analyze-sentiments-in-tweets">Analyze Sentiments in Tweets</h2>
+
+<p>You can use the <code class="highlighter-rouge">Python</code> package <code class="highlighter-rouge">textblob</code> to calculate the polarity 
+values of individual tweets. For this analysis you may want to include
+emojiis as they represent sentiment. This step has not been included 
+below.</p>
+
+<p>Begin by creating <code class="highlighter-rouge">textblob</code> objects, which assigns polarity values 
+to the tweets. You can identify the polarity value using the attribute 
+<code class="highlighter-rouge">.polarity</code> of <code class="highlighter-rouge">texblob</code> object.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create textblob objects of the tweets
+</span><span class="n">sentiment_objects</span> <span class="o">=</span> <span class="p">[</span><span class="n">TextBlob</span><span class="p">(</span><span class="n">tweet</span><span class="p">)</span> <span class="k">for</span> <span class="n">tweet</span> <span class="ow">in</span> <span class="n">tweets_no_urls</span><span class="p">]</span>
+
+<span class="n">sentiment_objects</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">polarity</span><span class="p">,</span> <span class="n">sentiment_objects</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(-0.5, TextBlob("Story of my life  boulder "))
+</code></pre></div></div>
+
+<p>You can apply list comprehension to create a list of the polarity values and text for each tweet, and then create a <code class="highlighter-rouge">Pandas Dataframe</code> from the list.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create list of polarity values and tweet text
+</span><span class="n">sentiment_values</span> <span class="o">=</span> <span class="p">[[</span><span class="n">tweet</span><span class="p">.</span><span class="n">sentiment</span><span class="p">.</span><span class="n">polarity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">tweet</span><span class="p">)]</span> <span class="k">for</span> <span class="n">tweet</span> <span class="ow">in</span> <span class="n">sentiment_objects</span><span class="p">]</span>
+
+<span class="n">sentiment_values</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[[0.0, 'Story of my life  boulder '],
+ [0.0,
+  'Were looking for the two who came to help a cyclist after a hitandrun at 30thBaseline 11pm Dec 23rd Boulder CO '],
+ [0.3575757575757576,
+  'Happy New Year Boulder  What are some of your New Years resolutions this year'],
+ [0.34545454545454546,
+  'simon_Says_so Nearly 60 degrees in Boulder today Great place to live '],
+ [0.0, 'Deer boulder onlyinboulder '],
+ [0.0,
+  'NWS has only bumped up tomrorows odds for snow in Denver from 30 to 40 To me it feels like it should be closer to 60 COwx weather']]
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create dataframe containing the polarity value and tweet text
+</span><span class="n">sentiment_df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">sentiment_values</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"polarity"</span><span class="p">,</span> <span class="s">"tweet"</span><span class="p">])</span>
+
+<span class="n">sentiment_df</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>polarity</th>
+      <th>tweet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>18816</th>
+      <td>0.000</td>
+      <td>RT EricRobertson A more representative flood p...</td>
+    </tr>
+    <tr>
+      <th>18817</th>
+      <td>0.125</td>
+      <td>Warning Flash flood of boulder creek is immine...</td>
+    </tr>
+    <tr>
+      <th>18818</th>
+      <td>0.550</td>
+      <td>I just got an Emergency Alert Nice to know the...</td>
+    </tr>
+    <tr>
+      <th>18819</th>
+      <td>0.000</td>
+      <td>RT dailycamera RT CUBoulderPolice  Some floodi...</td>
+    </tr>
+    <tr>
+      <th>18820</th>
+      <td>0.000</td>
+      <td>monikarun courtneyo eatplaylove Greeblemonkey ...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>These polarity values can be plotted in a histogram, which can help to highlight in the overall sentiment (i.e. more positivity or negativity) toward the subject.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="c1"># Plot histogram of the polarity values
+</span><span class="n">sentiment_df</span><span class="p">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.75</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+             <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+             <span class="n">color</span><span class="o">=</span><span class="s">"purple"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Sentiments from Tweets on Climate Change"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/07-apis-twitter/02-twitter-api/2020-03-25-twitter-06-boulder-flood-tweets/2020-03-25-twitter-06-boulder-flood-tweets_36_0.png" alt="This plot displays a histogram of polarity values for tweets on climate change." />
+<figcaption>This plot displays a histogram of polarity values for tweets on climate change.</figcaption>
+
+</figure>
+
+<p>To better understand the distribution of positive vs negative sentiment, 
+you can remove the polarity values that are equal to 0.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Remove polarity values equal to zero
+</span><span class="n">sentiment_df</span> <span class="o">=</span> <span class="n">sentiment_df</span><span class="p">[</span><span class="n">sentiment_df</span><span class="p">.</span><span class="n">polarity</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="c1"># Plot histogram with break at zero
+</span><span class="n">sentiment_df</span><span class="p">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.75</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+             <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+             <span class="n">color</span><span class="o">=</span><span class="s">"purple"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Sentiments from Tweets From the 2013 Colorado Flood"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/07-apis-twitter/02-twitter-api/2020-03-25-twitter-06-boulder-flood-tweets/2020-03-25-twitter-06-boulder-flood-tweets_39_0.png" alt="This plot displays a revised histogram of polarity values for tweets on climate change. For this histogram, polarity values equal to zero have been removed, and a break has been added at zero, to better highlight the distribution of polarity values." />
+<figcaption>This plot displays a revised histogram of polarity values for tweets on climate change. For this histogram, polarity values equal to zero have been removed, and a break has been added at zero, to better highlight the distribution of polarity values.</figcaption>
+
+</figure>
+
+
+          
+
+        
+
+        <!-- if the page is a course lesson, add pagination -->
+
+        
+         <!-- This is clunky code that forces pagination across lesson sets -->
+<!-- NOTE: it won't include slideshows as written which makes sense -->
+<!-- add forced pagination -->
+<!-- first, get total lesson count -->
+
+<div class="previous--next">
+
+
+
+
+
+<!-- if it's page one - then no previous button -->
+<!-- how do i figure out the link? i have to loop through again? -->
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+        <a href="http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/analyze-tweet-sentiment-in-python/" class="btn btn--info btn--large btn-success">
+          <i class="fa fa-4 fa-arrow-circle-left fa-4" aria-hidden="true"></i>
+          Tweet Sentiment Analysis </a>
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags
+  
+  <span class="a-main-tag">
+  <i class="fa fa-fw fa-tag" aria-hidden="true"></i><a href=http://localhost:4000/tags/find-and-manage-data/>Find and manage data</a>:
+  </span>
+  
+    
+    <a href=http://localhost:4000/tags/find-and-manage-data/apis/>apis</a> 
+    
+    
+  
+
+
+
+
+
+
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-09-11">September 11, 2020</time></p>
+        
+        <!-- Add license information w/ DOI to the bottom -->
+        
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+      </footer>
+
+      
+
+
+<section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/json-colorado-flood-twitter-data/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/json-colorado-flood-twitter-data/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/json-colorado-flood-twitter-data/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/json-colorado-flood-twitter-data/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+<br><br>
+  <a href="http://bit.ly/2jc5SXy" target="_blank">
+    <img src="http://localhost:4000/images/earth-data-analytics-professional-certificate-banner.png" alt="Get a professional Certificate in Earth Data Analytics at University of Colorado, Boulder" width="40%"></a>
+</section>
+
+
+       
+    </div>
+
+    
+      
+
+
+<div class="page__comments">
+  <h4 class="page__comments-title">Leave a Comment</h4>
+  
+    <section id="disqus_thread"></section>
+  
+</div>
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      
+        <h4 class="page__related-title">You May Also Enjoy</h4>
+      
+      <div class="grid__wrapper">
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/earth-analytics-bootcamp/plot-data-python">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">Plot Data With Matplotlib
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  1 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">
+
+     This Week
+
+  
+
+
+</p>
+    </article>
+  </a>
+</div>
+
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/summarize-climate-data-by-season/">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">Calculate Seasonal Summary Values from Climate Data Variables Stored in NetCDF 4 Format: Work With MACA v2 Climate Data in Python
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  25 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">Learn how to calculate seasonal summary values for MACA 2 climate data using xarray and region mask in open source Python.
+</p>
+    </article>
+  </a>
+</div>
+
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/subset-netcdf4-climate-data-spatially-aoi/">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">Calculate Summary Values Using Spatial Areas of Interest (AOIs) including Shapefiles for Climate Data Variables Stored in NetCDF 4 Format: Work With MACA v2 Climate Data in Python
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  33 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">Climate datasets stored in netcdf 4 format often cover the entire globe or an entire country. Learn how to subset climate data spatially and by time slices u...</p>
+    </article>
+  </a>
+</div>
+
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/use-netcdf-in-python-xarray/">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">How to Open and Process NetCDF 4 Data Format in Open Source Python
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  26 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">Historic and projected climate data are most often stored in netcdf 4 format. Learn how to open and process MACA version 2 climate data for the Continental U...</p>
+    </article>
+  </a>
+</div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+
+
+<!-- Adding analytics code -->
+
+        
+
+
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    <li>
+      <strong>&copy; 2021 Earth Lab -
+      <a href="http://localhost:4000/license"> All materials on this site
+        are subject to the CC BY-NC-ND 4.0 License. </a>
+      </strong>
+    </li>
+  </ul>
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/earthlabcu"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+    
+      <li><a href="http://github.com/earthlab"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<!--
+<div class="page__footer-copyright">Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+-->
+
+      </footer>
+    </div>
+
+    <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+
+
+
+  
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'earthlabcu';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+<script type="text/javascript"
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-84081999-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+
+  </body>
+</html>
+

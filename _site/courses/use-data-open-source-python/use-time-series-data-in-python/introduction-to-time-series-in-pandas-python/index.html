@@ -1,0 +1,4742 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+
+
+<meta charset="utf-8">
+
+
+
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>Work With Datetime Format in Python - Time Series Data  | Earth Data Science - Earth Lab </title>
+
+
+
+
+
+
+
+<meta property="og:locale" content="en-US">
+<meta property="og:site_name" content="Earth Data Science - Earth Lab">
+<meta property="og:title" content="Work With Datetime Format in Python - Time Series Data">
+
+
+  <link rel="canonical" href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/introduction-to-time-series-in-pandas-python/">
+  <meta property="og:url" content="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/introduction-to-time-series-in-pandas-python/">
+
+
+
+  <meta content="Python provides a datetime object for storing and working with dates. Learn how you can convert columns in a pandas dataframe containing dates and times as strings into datetime objects for more efficient analysis and plotting." name="description">
+  <meta property="og:description" content="Python provides a datetime object for storing and working with dates. Learn how you can convert columns in a pandas dataframe containing dates and times as strings into datetime objects for more efficient analysis and plotting.">
+
+
+<!-- twitter cards -->
+
+  <meta name="twitter:site" content="@earthlabcu">
+  <meta name="twitter:title" content="Work With Datetime Format in Python - Time Series Data">
+  <meta name="twitter:description" content="Python provides a datetime object for storing and working with dates. Learn how you can convert columns in a pandas dataframe containing dates and times as strings into datetime objects for more efficient analysis and plotting.">
+  <meta name="twitter:url" content="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/introduction-to-time-series-in-pandas-python/">
+
+  
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:image" content="https://earthdatascience.org/images/earth_sm_twit.png">
+    <meta name="twitter:image:alt" content="The Earthlab Logo - image of a globe with courses, lessons and tutorials">
+
+    
+  
+
+  
+
+
+
+  
+
+  
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2019-11-19T00:00:00-07:00">
+  
+    <link rel="next" href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/date-time-types-in-pandas-python/" title="Work With Datetime Format in Python - Time Series Data ">
+  
+  
+    <link rel="prev" href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/" title="Time Series Data in Python">
+  
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "Earth Analytics",
+      "url" : "http://localhost:4000",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Earth Data Science - Earth Lab Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-site-verification" content="LfpevjsE0wlELv5KKOZv1T2RhRimGSiRckWv5ZC19GU" />
+<!-- don't use the old cataloged meta tags -->
+<meta name="googlebot" content="noodp">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+
+<!-- For all browsers
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">-->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
+
+    <script src="http://localhost:4000/assets/js/copy-code.js"></script>
+  </head>
+
+  <body>
+
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    
+
+<!-- search bar begin  - turning off for now-->
+
+<div class="search">
+<form role="search" method="get" action="http://localhost:4000/search/">
+    <input id="q" name="q"
+           placeholder="Search earth data science site" type="text">
+</form>
+<!--<span class='cu-boulder'><a href="http://www.colorado.edu/earthlab" target="_blank">Earth Lab University of Colorado - Boulder Home </a></span> -->
+</div>
+
+
+<!-- search bar END -->
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <button><div class="navicon"></div></button>
+        <ul class="visible-links">
+          <li class="masthead__menu-item masthead__menu-item--lg"><a href="http://localhost:4000/"><img src="/images/earth-lab-logo.png" alt="Earth Lab - Earth Data Science" style="height:80%;width:85%"></a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/tutorials/">Tutorials</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/courses/">Courses</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/workshops/">Workshops</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/tools/">Tools</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/blog/">Blog</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/about/">About</a></li>
+          
+
+        </ul>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    
+
+
+
+  <div class="page__hero--overlay" style=" background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('http://localhost:4000/images/header-images/earth-data-analytics-professional-certificate-banner.jpg');">
+  <div class="wrapper">
+        <h1 class="page__title" itemprop="headline">
+          Earth Data Analytics Online Certificate
+        </h1>
+        <p><a href="http://bit.ly/2jc5SXy" target = "_blank" class="btn btn--light-outline btn--large">Enroll now! Learn more.</a></p>
+  </div>
+</div>
+
+
+
+
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="breadcrumbs" role="menubar" aria-label="breadcrumbs">
+ <ol itemscope itemtype="http://schema.org/BreadcrumbList">
+ <a href="http://localhost:4000"></a>
+ 
+ 
+ <!-- there is an offset of 1 so subtract 2 from the final crumb number-->
+ 
+   
+   
+     <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+       <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+       <meta itemprop="position" content="1" />
+     </li>
+     <span class="sep">/</span>
+   
+    
+        
+        <li><a href="http://localhost:4000/courses/">Courses </a>
+        <meta itemprop="position" content="2" />
+        <span class="sep">/</span></li>
+    
+  
+   
+    
+        
+        <li><a href="http://localhost:4000/courses/use-data-open-source-python/">Use data open source python </a>
+        <meta itemprop="position" content="3" />
+        <span class="sep">/</span></li>
+    
+  
+   
+    
+        
+        <li><a href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/">Use time series data in python </a>
+        <meta itemprop="position" content="4" />
+        <span class="sep">/</span></li>
+    
+  
+   
+    
+        <li class="current">Work With Datetime Format in Python - Time Series Data </li>
+    
+  
+</ol>
+</nav>
+
+<!-- from min mistakes -->
+
+
+
+
+  
+
+
+<div id="main" role="main">
+  
+
+
+
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+    
+    
+
+
+    
+
+    
+     <!--  Might be able to delete this This is the code that populates the side bar navigation if there is a class-->
+      
+
+
+
+
+
+
+
+<!-- make sure we're only grabbing pages for the course -->
+
+
+
+<!--<h3>Week 1 Lessons</h3>-->
+<!-- i don't think the code below is used as modules is defined lower down as well. -->
+
+<!-- This is how modules are sorted on the left hand side bar -->
+
+
+
+
+
+
+<h5><a href="http://localhost:4000/courses/intermediate-earth-data-science-textbook/" ><i class="fa fa-home" aria-hidden="true"></i> Intermediate earth data science textbook</a></h5>
+
+<!-- Just get the pages from this course -->
+
+
+
+
+
+
+<nav class="nav__list">
+
+
+
+
+
+
+
+<ul>
+  <li><span class="nav__sub-title"><i class="fa fa-book" aria-hidden="true"></i> Units</span>
+   <ul>
+
+       
+
+        
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+                
+                    <li class='active-section'> <a href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/"><i class="fa fa-folder-open" aria-hidden="true"></i>
+                     1. TIME SERIES DATA IN PYTHON</a></li>
+
+            
+
+<div class='active-menu'>
+      <ul>
+        
+        <!-- Note that class-order allows you to sort modules by class order if there are more than 1 in a class -->
+        
+
+        
+
+        
+
+        
+        
+        <!-- If it's a textbook with a chapter number write "chapter", else assume it is a week -->
+
+          <li><span class="nav__sub-title grey"><i class="fa fa-caret-down" aria-hidden="true"></i>   Chapter 1 Time series data in pandas  </span></li>
+        <ul>
+
+      
+      <!-- count lessons -->
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/introduction-to-time-series-in-pandas-python/ class='active'> <!--1.1 -->- Intro to Timeseries</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/date-time-types-in-pandas-python/><!--1.2 --> - Dates in Python</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/date-time-types-in-pandas-python/subset-time-series-data-python/><!--1.3 --> - Subset Time Series Data in Python</a></li>
+          
+          
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/date-time-types-in-pandas-python/resample-time-series-data-pandas-python/><!--1.4 --> - Resample Time Series Data</a></li>
+          
+          
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/date-time-types-in-pandas-python/customize-dates-matplotlib-plots-python/><!--1.5 --> - Custom Date Formats for Plots</a></li>
+          
+          
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/date-time-types-in-pandas-python/time-series-exercise/><!--1.6 --> - Time Series Challenges</a></li>
+          
+          
+
+        
+       </ul>
+        
+
+        
+        
+        <!-- If it's a textbook with a chapter number write "chapter", else assume it is a week -->
+
+          <li><span class="nav__sub-title grey"><i class="fa fa-caret-down" aria-hidden="true"></i>   Chapter 1.5 Flood returns period analysis in python  </span></li>
+        <ul>
+
+      
+      <!-- count lessons -->
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/floods-return-period-and-probability/><!--1.1 --> - Flood Return Period</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+          
+          <li><a href= http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/precipitation-discharge-mass-balance/><!--1.2 --> - Cumulative Sums in Pandas</a></li>
+          
+          
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+        
+        
+
+        
+       </ul>
+        
+
+        
+      </ul>
+
+      <!-- BEGIN Learn how to lessons -->
+       <ul>
+         
+         
+       </ul>
+
+
+     </div>
+
+
+      <!-- END BEGIN Learn how to lessons -->
+
+      <!--  -->
+      
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 2 <a href="http://localhost:4000/courses/use-data-open-source-python/intro-vector-data-python/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 INTRO TO SPATIAL VECTOR DATA IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-vector-data-python/spatial-data-vector-shapefiles/"> Chapter 2:   Spatial Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-vector-data-python/vector-data-processing/"> Chapter 3:   Processing Spatial Vector Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 3 <a href="http://localhost:4000/courses/use-data-open-source-python/intro-raster-data-python/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 INTRODUCTION TO RASTER DATA IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-raster-data-python/fundamentals-raster-data/"> Chapter 4:   Intro to Raster Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-raster-data-python/raster-data-processing/"> Chapter 5:   Processing Raster Data in Python </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 4 <a href="http://localhost:4000/courses/use-data-open-source-python/spatial-data-applications/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 SPATIAL DATA APPLICATIONS IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/spatial-data-applications/lidar-remote-sensing-uncertainty/"> Chapter 6:   Uncertainty in Remote Sensing Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 5 <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 MULTISPECTRAL REMOTE SENSING DATA IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/intro-multispectral-data/"> Chapter 7:   Intro to Multispectral Remote Sensing Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/intro-naip/"> Chapter 8:   NAIP </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/landsat-in-Python/"> Chapter 9:   Landsat Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/modis-data-in-python/"> Chapter 10:   MODIS Data </a>
+                                </li>
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/multispectral-remote-sensing/vegetation-indices-in-python/"> Chapter 11:   Calculate Vegetation Indices in Python </a>
+                                </li>
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 6 <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 INTRODUCTION TO HIERARCHICAL DATA FORMATS IN PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/intro-to-hdf4/"> Chapter 12:   HDF4 </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/intro-to-climate-data/"> Chapter 13:   NETCDF </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 7 <a href="http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 INTRODUCTION TO API DATA ACCESS IN OPEN SOURCE PYTHON</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/apis-in-python/"> Chapter 15:   APIs </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/intro-to-apis/social-media-text-mining-python/"> Chapter 16:   Twitter Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 8 <a href="http://localhost:4000/courses/use-data-open-source-python/earth-data-science-workflows/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 EARTH DATA SCIENCE WORKFLOWS</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/earth-data-science-workflows/design-efficient-automated-data-workflows/"> Chapter 12:   Design and Automate Data Workflows </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+
+            <!-- Only list the week if it's not the week for the current landing page -->
+            
+                <li> <b>SECTION 9 <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/"> <!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+                 DATA STORIES</a></b>
+                </li>
+
+                    <!-- list the chapters for each section  updating this to show a chapter number if it's a textbook-->
+                    
+                     <ul>
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/colorado-floods-2013/"> Chapter 20:   Flood overview  </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/what-is-lidar-data/"> Chapter 21:   Intro to Lidar Data </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <li>
+                                    <a href="http://localhost:4000/courses/use-data-open-source-python/data-stories/cold-springs-wildfire/"> Chapter 22:   Wildfire Overview </a>
+                                </li>
+                            
+                        
+                            
+                        
+                            
+                        
+                    </ul>
+
+
+            
+
+            <!-- This is for the activate section in the nav which is grey -->
+
+            
+
+    
+  </ul></li>
+ </ul>
+
+
+ <ul>
+   <li><span class="nav__sub-title"><i class="fa fa-folder-open" aria-hidden="true"></i> Overview</span>
+    <ul>
+     
+          
+         <li> <a href="http://localhost:4000/courses/use-data-open-source-python/">
+           Use Data for Earth and Environmental Science in Open Source Python Home </a></li>
+         
+
+     
+   </ul>
+ </li>
+</ul>
+</nav>
+
+<h5><a href="http://localhost:4000/courses/intermediate-earth-data-science-textbook/" ><i class="fa fa-home" aria-hidden="true"></i> intermediate-earth-data-science-textbook Home</a></h5>
+
+    
+
+    
+
+  
+  </div>
+
+
+
+
+
+
+<!-- begin science / science themes side bar nav -->
+
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+
+    <meta itemprop="headline" content="Work With Datetime Format in Python - Time Series Data">
+    <meta itemprop="description" content="Python provides a datetime object for storing and working with dates. Learn how you can convert columns in a pandas dataframe containing dates and times as strings into datetime objects for more efficient analysis and plotting.">
+    <meta itemprop="datePublished" content="November 19, 2019">
+    <meta itemprop="dateModified" content="September 11, 2020">
+
+    <div class="page__inner-wrap">
+        <header>
+          
+
+          <!-- BEGIN: insert a welcome to the module block on pages that are part of a module set -->
+
+          <!-- END: insert welcome block -->
+
+          
+              
+
+            
+                <h1 class="page__title" itemprop="headline">
+                Lesson 1. 
+                 Work With Datetime Format in Python - Time Series Data
+
+                
+                </h1>
+            
+
+          
+
+          
+            <div class="page__meta">
+              
+              
+              <a href="http://localhost:4000/authors/leah-wasser">Leah Wasser</a>, 
+              
+              
+              <a href="http://localhost:4000/authors/jenny-palomino">Jenny Palomino</a>, 
+              
+              
+              <a href="http://localhost:4000/authors/chris-holdgraf">Chris Holdgraf</a>, 
+              
+              
+              <a href="http://localhost:4000/authors/martha-morrissey">Martha Morrissey</a>
+              
+            </div>
+          
+
+            <br/>
+
+            
+            <div class="notice--warning header" markdown="1">
+            
+              
+                  <h1> <i class="fa fa-6 fa-book" aria-hidden="true"></i> Use Time Series Data in Python With Pandas - Intermediate earth data science textbook course module</h1>
+                  Welcome to the first lesson in the <strong>Use Time Series Data in Python With Pandas</strong> module.
+                  Python provides a datetime object for storing and working with dates. Learn how to handle date fields using pandas to work with time series data in Python.
+               
+            
+            </div>
+            
+
+              
+            
+
+            <!-- For tools pages add authors and tool title -->
+
+            
+        </header>
+
+
+
+      <section class="page__content" itemprop="text">
+
+        <!-- would like to include the TOC automatically but this does weird things-->
+        
+          
+            <aside class="sidebar__right">
+<nav class="toc">
+    <header><h4 class="nav__title"><i class="fa fa-file-text"></i> In This Chapter</h4></header>
+<ul class="toc__menu" id="markdown-toc">
+  <li><a href="#chapter-one---introduction-to-time-series-data-in-python" id="markdown-toc-chapter-one---introduction-to-time-series-data-in-python"><i class="fa fa-ship" aria-hidden="true"></i> Chapter One - Introduction to Time Series Data in Python</a></li>
+  <li><a href="#learning-objectives" id="markdown-toc-learning-objectives"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Learning Objectives</a></li>
+  <li><a href="#what-you-need" id="markdown-toc-what-you-need"><i class="fa fa-check-square-o fa-2" aria-hidden="true"></i> What You Need</a></li>
+  <li><a href="#why-use-datetime-objects-in-python" id="markdown-toc-why-use-datetime-objects-in-python">Why Use Datetime Objects in Python</a></li>
+  <li><a href="#challenge-1-review-metadata" id="markdown-toc-challenge-1-review-metadata"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Challenge 1: Review Metadata</a></li>
+  <li><a href="#subset-time-series-data-by-time" id="markdown-toc-subset-time-series-data-by-time">Subset Time Series Data by Time</a></li>
+  <li><a href="#resample-time-series-data" id="markdown-toc-resample-time-series-data">Resample Time Series Data</a></li>
+  <li><a href="#challenge-2-plot-multiple-axes" id="markdown-toc-challenge-2-plot-multiple-axes"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Challenge 2: Plot Multiple Axes</a></li>
+  <li><a href="#challenge-3-modify-plot-x-and-y-limits" id="markdown-toc-challenge-3-modify-plot-x-and-y-limits"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Challenge 3: Modify Plot x and y Limits</a></li>
+  <li><a href="#challenge-4-data-subsets" id="markdown-toc-challenge-4-data-subsets"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Challenge 4: Data Subsets</a></li>
+  <li><a href="#bonus-challenge-formatting-dates-on-the-x-axis" id="markdown-toc-bonus-challenge-formatting-dates-on-the-x-axis"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Bonus Challenge: Formatting Dates on the X-Axis</a></li>
+  <li><a href="#summary" id="markdown-toc-summary">Summary</a></li>
+</ul>
+
+  </nav>
+</aside>
+
+<div class="notice--success">
+
+  <h2 id="chapter-one---introduction-to-time-series-data-in-python"><i class="fa fa-ship" aria-hidden="true"></i> Chapter One - Introduction to Time Series Data in Python</h2>
+
+  <p>In this chapter, you will learn how to work with the <code class="highlighter-rouge">datetime</code> object in 
+<strong>Python</strong> which you need for plotting and working with time series data. 
+You will also learn how to work with “no data” values in <strong>Python</strong>.</p>
+
+  <h2 id="learning-objectives"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Learning Objectives</h2>
+
+  <p>After completing this chapter, you will be able to:</p>
+
+  <ul>
+    <li>Import a time series dataset using <strong>pandas</strong> with dates converted to a <code class="highlighter-rouge">datetime</code> object in <strong>Python</strong>.</li>
+    <li>Use the <code class="highlighter-rouge">datetime</code> object to create easier-to-read time series plots and work with data across various timeframes (e.g. daily, monthly, yearly) in <strong>Python</strong>.</li>
+    <li>Explain the role of “no data” values and how the <code class="highlighter-rouge">NaN</code> value is used in <strong>Python</strong> to label “no data” values.</li>
+    <li>Set a “no data” value for a file when you import it into a <strong>pandas</strong> dataframe.</li>
+  </ul>
+
+  <h2 id="what-you-need"><i class="fa fa-check-square-o fa-2" aria-hidden="true"></i> What You Need</h2>
+
+  <p>You should have Conda setup on your computer and the Earth Analytics 
+Python Conda environment. Follow the <a href="http://localhost:4000/workshops/setup-earth-analytics-python/setup-git-bash-conda/">Set up Git, Bash, and Conda on your computer</a> to install these tools.</p>
+
+  <p>Be sure that you have reviewed the <a href="http://localhost:4000/courses/intro-to-earth-data-science/">Introduction to Earth Data Science textbook</a> or are familiar with the <strong>Python</strong> programming 
+language and the <strong>pandas</strong> package for working with dataframes.</p>
+
+  <p><a href="https://ndownloader.figshare.com/files/12395030" data-proofer-ignore="" class="btn btn--success btn--x-large"><i class="fa fa-download" aria-hidden="true"></i> Download Colorado Flood Teaching Data Subset data</a></p>
+
+</div>
+
+<h2 id="why-use-datetime-objects-in-python">Why Use Datetime Objects in Python</h2>
+
+<p>Dates can be tricky in any programming language. While you may 
+see a date in a dataset and recognize it as something that can 
+be quantified and related to time, a computer reads in numbers 
+and characters. Often by default, date information is loaded 
+as a string (i.e. a set of characters), rather than something 
+that has an order in time.</p>
+
+<p>The <strong>Python</strong> <code class="highlighter-rouge">datetime</code> object will make working with and plotting 
+time series data easier. You can convert <strong>pandas</strong> dataframe 
+columns containing dates and times as strings into <code class="highlighter-rouge">datetime</code> objects.</p>
+
+<p>Below, you will find a quick introduction to working with and 
+plotting time series data using Pandas. The following pages in 
+this chapter will dive further into the details associated with 
+using, manipulating and analyzing time series data.</p>
+
+<h3 id="import-packages-and-get-data">Import Packages and Get Data</h3>
+
+<p>To begin, import the packages that you need to work with tabular data in Python.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import necessary packages
+</span><span class="kn">from</span> <span class="nn">matplotlib.axes._axes</span> <span class="kn">import</span> <span class="n">_log</span> <span class="k">as</span> <span class="n">matplotlib_axes_logger</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">earthpy</span> <span class="k">as</span> <span class="n">et</span>
+
+<span class="c1"># Handle date time conversions between pandas and matplotlib
+</span><span class="kn">from</span> <span class="nn">pandas.plotting</span> <span class="kn">import</span> <span class="n">register_matplotlib_converters</span>
+<span class="n">register_matplotlib_converters</span><span class="p">()</span>
+
+<span class="c1"># Dealing with error thrown by one of the plots
+</span><span class="n">matplotlib_axes_logger</span><span class="p">.</span><span class="n">setLevel</span><span class="p">(</span><span class="s">'ERROR'</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="p">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s">'ignore'</span><span class="p">)</span>
+
+
+<span class="c1"># Adjust font size and style of all plots in notebook with seaborn
+</span><span class="n">sns</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">"whitegrid"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Next, you set your working directory to:</p>
+
+<p><code class="highlighter-rouge">~/earth-analytics/data</code></p>
+
+<p>And finally you open up the file: <code class="highlighter-rouge">805325-precip-dailysum-2003-2013.csv</code>
+which is a <code class="highlighter-rouge">.csv</code> file that contains precipitation data for 
+Boulder, Colorado for 2003 to 2013 when the flood occurred 
+in Colorado.</p>
+
+<div class="notice--success alert alert-info">
+    
+<i class="fa fa-star"></i> **Data Tip:**
+You can read more about the data used in this lesson in the 
+<a href="https://www.earthdatascience.org/courses/use-data-open-source-python/data-stories/colorado-floods-2013/how-rain-impacts-floods/">data story 
+the discusses the Colorado flood.</a>   
+</div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Download the data
+</span><span class="n">data</span> <span class="o">=</span> <span class="n">et</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">'colorado-flood'</span><span class="p">)</span>
+
+<span class="c1"># Set working directory
+</span><span class="n">os</span><span class="p">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">et</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">HOME</span><span class="p">,</span> <span class="s">'earth-analytics'</span><span class="p">,</span> <span class="s">"data"</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>Next, open the precipitation data for Boulder, Colorado. Look at the structure
+of the data.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Define relative path to the data
+</span><span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">"colorado-flood"</span><span class="p">,</span>
+                         <span class="s">"precipitation"</span><span class="p">,</span>
+                         <span class="s">"805325-precip-daily-2003-2013.csv"</span><span class="p">)</span>
+
+<span class="c1"># Import the file as a pandas dataframe
+</span><span class="n">boulder_precip_2003_2013</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+<span class="n">boulder_precip_2003_2013</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>STATION</th>
+      <th>STATION_NAME</th>
+      <th>ELEVATION</th>
+      <th>LATITUDE</th>
+      <th>LONGITUDE</th>
+      <th>DATE</th>
+      <th>HPCP</th>
+      <th>Measurement Flag</th>
+      <th>Quality Flag</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>20030101 01:00</td>
+      <td>0.0</td>
+      <td>g</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>20030201 01:00</td>
+      <td>0.0</td>
+      <td>g</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>20030202 19:00</td>
+      <td>0.2</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>20030202 22:00</td>
+      <td>0.1</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>20030203 02:00</td>
+      <td>0.1</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Plot the data using the <code class="highlighter-rouge">DAILY_PRECIP</code> column. What do you notice about 
+the plot?</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">boulder_precip_2003_2013</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">"DATE"</span><span class="p">,</span>
+                              <span class="n">y</span><span class="o">=</span><span class="s">"HPCP"</span><span class="p">,</span>
+                              <span class="n">title</span><span class="o">=</span><span class="s">"Daily Precipitation "</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/01-time-series/plot-time-series-handle-dates/2019-11-19-time-series-01-get-started-with-time-series-python/2019-11-19-time-series-01-get-started-with-time-series-python_8_0.png" alt="Line graph of daily precipitation for Boulder Colorado from 2003 to 2013. The N/A value of 999.99 has not been removed yet so the graph looks like vertical lines where those values exist." />
+<figcaption>Line graph of daily precipitation for Boulder Colorado from 2003 to 2013. The N/A value of 999.99 has not been removed yet so the graph looks like vertical lines where those values exist.</figcaption>
+
+</figure>
+
+<div class="notice--warning alert alert-info">
+
+  <h2 id="challenge-1-review-metadata"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Challenge 1: Review Metadata</h2>
+
+  <p>In the cell below list the things that you think look “wrong” with the plot 
+above.</p>
+
+  <p><strong>Next, read the <code class="highlighter-rouge">PRECIP_HLY_documentation.pdf</code> metadata document that was included
+with the data before answering items 1-4.</strong></p>
+
+  <ol>
+    <li>Do the data have a no data value?</li>
+    <li>How are missing data “identified” in the table”?</li>
+    <li>How frequently are the data recorded (every second, minute, hour, day, week, etc?)?</li>
+    <li>What are the units of the data (NOTE - this may be a “trick” question :) ). But see what you can find in the metadata.</li>
+  </ol>
+
+  <p>HINT: the next few cells may help you explore the data to better understand 
+what is going on with it.</p>
+</div>
+
+<h3 id="time-series-data-cleaning--exploration">Time Series Data Cleaning &amp; Exploration</h3>
+
+<p>The data above do not look quite right. Take some time to explore the data to 
+better understand what you need to clean up.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Look at the range of values in the data - specifically the HPCP column
+</span><span class="n">boulder_precip_2003_2013</span><span class="p">[</span><span class="s">"HPCP"</span><span class="p">].</span><span class="n">describe</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>count    1840.000000
+mean       51.192587
+std       220.208147
+min         0.000000
+25%         0.100000
+50%         0.100000
+75%         0.100000
+max       999.990000
+Name: HPCP, dtype: float64
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">boulder_precip_2003_2013</span><span class="p">.</span><span class="n">dtypes</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STATION              object
+STATION_NAME         object
+ELEVATION           float64
+LATITUDE            float64
+LONGITUDE           float64
+DATE                 object
+HPCP                float64
+Measurement Flag     object
+Quality Flag         object
+dtype: object
+</code></pre></div></div>
+
+<p>You may have observed several anomalies in the data.</p>
+
+<ol>
+  <li>The data seem to have a very large number: 999.99. More often than note, a value of 999 represents a no data value that needs to be removed from your data.</li>
+  <li>You may have noticed that your x axis date values in the plot look “messy”. When you see an x-axis like this but you know your data are time series, it’s most often caused by your datetime data not being read in properly as numeric date times.</li>
+</ol>
+
+<p>You can address all of these issues using the following <code class="highlighter-rouge">read_csv()</code> parameters:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">parse_dates=</code>: Column containing date information that should be read into the <code class="highlighter-rouge">DataFrame</code> as a datetime object.</li>
+  <li><code class="highlighter-rouge">na_values=</code>: Values in the file that should be replaced with <code class="highlighter-rouge">NaN</code> (Not a Number).</li>
+  <li><code class="highlighter-rouge">index_col=1</code>: optional – but this will make subsetting the data much easier</li>
+</ul>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import data using datetime and no data value
+</span><span class="n">boulder_precip_2003_2013</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span>
+                                       <span class="c1"># Make sure the dates import in datetime format
+</span>                                       <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s">'DATE'</span><span class="p">],</span>
+                                       <span class="c1"># Set DATE as the index so you can subset data by time period
+</span>                                       <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="s">'DATE'</span><span class="p">],</span>
+                                       <span class="c1"># Mask no data values so they are not plotted / used in analysis
+</span>                                       <span class="n">na_values</span><span class="o">=</span><span class="p">[</span><span class="s">'999.99'</span><span class="p">])</span>
+
+<span class="c1"># View the data
+</span><span class="n">boulder_precip_2003_2013</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>STATION</th>
+      <th>STATION_NAME</th>
+      <th>ELEVATION</th>
+      <th>LATITUDE</th>
+      <th>LONGITUDE</th>
+      <th>HPCP</th>
+      <th>Measurement Flag</th>
+      <th>Quality Flag</th>
+    </tr>
+    <tr>
+      <th>DATE</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2003-01-01 01:00:00</th>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>0.0</td>
+      <td>g</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>2003-02-01 01:00:00</th>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>0.0</td>
+      <td>g</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>2003-02-02 19:00:00</th>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>0.2</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>2003-02-02 22:00:00</th>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>0.1</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>2003-02-03 02:00:00</th>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>0.1</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Notice above that the DATE column header is visually lower than the other 
+columns and the entire column is bold. This represents the DATE column as an 
+index. You set the DATE column as an index above using the parameter:</p>
+
+<p><code class="highlighter-rouge">index_col=['DATE']</code></p>
+
+<p>Once your date values are an index, you can more easily subset the data 
+by time period. You will learn how to do this below.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># View summary statistics == Notice the DATE column is not included
+</span><span class="n">boulder_precip_2003_2013</span><span class="p">.</span><span class="n">describe</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ELEVATION</th>
+      <th>LATITUDE</th>
+      <th>LONGITUDE</th>
+      <th>HPCP</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>1840.0</td>
+      <td>1840.000000</td>
+      <td>1840.000000</td>
+      <td>1746.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>1650.5</td>
+      <td>40.033851</td>
+      <td>-105.281106</td>
+      <td>0.111856</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.0</td>
+      <td>0.000045</td>
+      <td>0.000005</td>
+      <td>0.093222</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>1650.5</td>
+      <td>40.033800</td>
+      <td>-105.281110</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>1650.5</td>
+      <td>40.033800</td>
+      <td>-105.281110</td>
+      <td>0.100000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>1650.5</td>
+      <td>40.033890</td>
+      <td>-105.281110</td>
+      <td>0.100000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>1650.5</td>
+      <td>40.033890</td>
+      <td>-105.281100</td>
+      <td>0.100000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>1650.5</td>
+      <td>40.033890</td>
+      <td>-105.281100</td>
+      <td>2.200000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Notice that once you remove no data values, the min and max
+values for the HPCP column are more reasonable for hourly 
+precipitation ranging from 0 to 2.2.</p>
+
+<h3 id="using-an-index-in-pandas">Using An Index In Pandas</h3>
+
+<p>Above, you used <code class="highlighter-rouge">index_col=['DATE']</code> to get the date column to be an index for 
+the Pandas DataFrame. Assigning an index column is helpful when using timeseries 
+data as it allows you to easily subset your data by time (see below for an
+overview of subsetting data).</p>
+
+<p>It is also important to know that once a column is an index, you need to call 
+it differently. For instance, below you run <code class="highlighter-rouge">.dtypes</code> on your data. Notice that 
+<code class="highlighter-rouge">DATE</code> is no longer a column described in your dataframe.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Where is the date column
+</span><span class="n">boulder_precip_2003_2013</span><span class="p">.</span><span class="n">dtypes</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STATION              object
+STATION_NAME         object
+ELEVATION           float64
+LATITUDE            float64
+LONGITUDE           float64
+HPCP                float64
+Measurement Flag     object
+Quality Flag         object
+dtype: object
+</code></pre></div></div>
+
+<p>You can still access the DATE column as an index column using <code class="highlighter-rouge">.index</code>:</p>
+
+<p><code class="highlighter-rouge">data-frame-name.index</code></p>
+
+<p>Try it out. Notice that below the output of <code class="highlighter-rouge">.index</code> is a <code class="highlighter-rouge">datetime64</code> 
+object.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># View the index for your data frame
+</span><span class="n">boulder_precip_2003_2013</span><span class="p">.</span><span class="n">index</span>
+</code></pre></div></div>
+
+<div class="output execute_result highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DatetimeIndex(['2003-01-01 01:00:00', '2003-02-01 01:00:00',
+               '2003-02-02 19:00:00', '2003-02-02 22:00:00',
+               '2003-02-03 02:00:00', '2003-02-05 02:00:00',
+               '2003-02-05 08:00:00', '2003-02-06 00:00:00',
+               '2003-02-07 12:00:00', '2003-02-10 13:00:00',
+               ...
+               '2013-12-01 01:00:00', '2013-12-03 20:00:00',
+               '2013-12-04 03:00:00', '2013-12-04 06:00:00',
+               '2013-12-04 09:00:00', '2013-12-22 01:00:00',
+               '2013-12-23 00:00:00', '2013-12-23 02:00:00',
+               '2013-12-29 01:00:00', '2013-12-31 00:00:00'],
+              dtype='datetime64[ns]', name='DATE', length=1840, freq=None)
+</code></pre></div></div>
+
+<p>You can also reset the index if you want it to turn it back into a normal
+column using <code class="highlighter-rouge">data-frame.reset_index()</code></p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">boulder_precip_2003_2013</span><span class="p">.</span><span class="n">reset_index</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>DATE</th>
+      <th>STATION</th>
+      <th>STATION_NAME</th>
+      <th>ELEVATION</th>
+      <th>LATITUDE</th>
+      <th>LONGITUDE</th>
+      <th>HPCP</th>
+      <th>Measurement Flag</th>
+      <th>Quality Flag</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2003-01-01 01:00:00</td>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>0.0</td>
+      <td>g</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2003-02-01 01:00:00</td>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>0.0</td>
+      <td>g</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2003-02-02 19:00:00</td>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>0.2</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2003-02-02 22:00:00</td>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>0.1</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2003-02-03 02:00:00</td>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>0.1</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1835</th>
+      <td>2013-12-22 01:00:00</td>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03380</td>
+      <td>-105.28110</td>
+      <td>NaN</td>
+      <td>[</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>1836</th>
+      <td>2013-12-23 00:00:00</td>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03380</td>
+      <td>-105.28110</td>
+      <td>NaN</td>
+      <td>]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>1837</th>
+      <td>2013-12-23 02:00:00</td>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03380</td>
+      <td>-105.28110</td>
+      <td>0.1</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>1838</th>
+      <td>2013-12-29 01:00:00</td>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03380</td>
+      <td>-105.28110</td>
+      <td>NaN</td>
+      <td>[</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>1839</th>
+      <td>2013-12-31 00:00:00</td>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03380</td>
+      <td>-105.28110</td>
+      <td>NaN</td>
+      <td>]</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+<p>1840 rows × 9 columns</p>
+</div>
+
+<p>Now that you have cleaned up the data, you can plot it. Below, you use 
+<code class="highlighter-rouge">.plot()</code> to plot. If you have an index column, then <code class="highlighter-rouge">.plot()</code> will automatically
+select that column to plot on the x-axis. You then only need to specify the 
+y-axis column.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">boulder_precip_2003_2013</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s">"HPCP"</span><span class="p">,</span>
+                              <span class="n">title</span><span class="o">=</span><span class="s">"Hourly Precipitation"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/01-time-series/plot-time-series-handle-dates/2019-11-19-time-series-01-get-started-with-time-series-python/2019-11-19-time-series-01-get-started-with-time-series-python_26_0.png" alt="Line graph of hourly precipitation for Boulder Colorado from 2003 to 2013" />
+<figcaption>Line graph of hourly precipitation for Boulder Colorado from 2003 to 2013</figcaption>
+
+</figure>
+
+<h2 id="subset-time-series-data-by-time">Subset Time Series Data by Time</h2>
+
+<p>Once you have cleaned up your data, and assigned a datetime index, 
+you can quickly begin to plot and summarize 
+data by time periods. Below you subset the data for 2005.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Subset data from 2005
+</span><span class="n">precip_2005</span> <span class="o">=</span> <span class="n">boulder_precip_2003_2013</span><span class="p">[</span><span class="s">'2005'</span><span class="p">]</span>
+<span class="n">precip_2005</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="output execute_result">
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>STATION</th>
+      <th>STATION_NAME</th>
+      <th>ELEVATION</th>
+      <th>LATITUDE</th>
+      <th>LONGITUDE</th>
+      <th>HPCP</th>
+      <th>Measurement Flag</th>
+      <th>Quality Flag</th>
+    </tr>
+    <tr>
+      <th>DATE</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2005-01-01 01:00:00</th>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>0.0</td>
+      <td>g</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>2005-01-02 06:00:00</th>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>NaN</td>
+      <td>{</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>2005-01-02 08:00:00</th>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>NaN</td>
+      <td>}</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>2005-01-05 08:00:00</th>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>0.1</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>2005-01-12 04:00:00</th>
+      <td>COOP:050843</td>
+      <td>BOULDER 2 CO US</td>
+      <td>1650.5</td>
+      <td>40.03389</td>
+      <td>-105.28111</td>
+      <td>0.1</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Remove missing data values
+</span><span class="n">precip_2005_clean</span> <span class="o">=</span> <span class="n">precip_2005</span><span class="p">.</span><span class="n">dropna</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Plot the data using pandas
+</span>
+<span class="n">precip_2005_clean</span><span class="p">.</span><span class="n">reset_index</span><span class="p">().</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">"DATE"</span><span class="p">,</span>
+                                     <span class="n">y</span><span class="o">=</span><span class="s">"HPCP"</span><span class="p">,</span>
+                                     <span class="n">title</span><span class="o">=</span><span class="s">"Hourly Precipitation"</span><span class="p">,</span>
+                                     <span class="n">kind</span><span class="o">=</span><span class="s">"scatter"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/01-time-series/plot-time-series-handle-dates/2019-11-19-time-series-01-get-started-with-time-series-python/2019-11-19-time-series-01-get-started-with-time-series-python_30_0.png" alt="Scatter plot of hourly precipitation for Boulder Colorado in 2005. Plotted with pandas." />
+<figcaption>Scatter plot of hourly precipitation for Boulder Colorado in 2005. Plotted with pandas.</figcaption>
+
+</figure>
+
+<p>While you can plot data with pandas, it’s often easier to simply use matplotlib
+directly as this gives you more control of your plots. Below you create a scatter 
+plot of the data using <code class="highlighter-rouge">ax.scatter</code>.</p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Plot the data using native matplotlib
+</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">precip_2005_clean</span><span class="p">.</span><span class="n">index</span><span class="p">.</span><span class="n">values</span><span class="p">,</span>
+           <span class="n">y</span><span class="o">=</span><span class="n">precip_2005_clean</span><span class="p">[</span><span class="s">"HPCP"</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/01-time-series/plot-time-series-handle-dates/2019-11-19-time-series-01-get-started-with-time-series-python/2019-11-19-time-series-01-get-started-with-time-series-python_32_0.png" alt="Scatter plot of hourly precipitation for Boulder Colorado in 2005. Plotted with matplotlib." />
+<figcaption>Scatter plot of hourly precipitation for Boulder Colorado in 2005. Plotted with matplotlib.</figcaption>
+
+</figure>
+
+<h2 id="resample-time-series-data">Resample Time Series Data</h2>
+
+<p>Resampling time series data refers to the act of summarizing data 
+over different time periods. For example, above you have been working 
+with hourly data. However, you may want to plot data summarized by day.</p>
+
+<p>You can resample time series data in Pandas using the <code class="highlighter-rouge">resample()</code>
+method. Within that method you call the time frequency for which 
+you want to resample. Examples including day (<code class="highlighter-rouge">"D"</code>) or week <code class="highlighter-rouge">("w")</code>.</p>
+
+<p>When you resample data, you need to also tell Python how you wish 
+to summarize the data for that time period. For example do you want 
+to summarize or add all all values for each day?</p>
+
+<p><code class="highlighter-rouge">precip_2005_clean.resample("D").sum()</code></p>
+
+<p>or do you want a max value:</p>
+
+<p><code class="highlighter-rouge">precip_2005_clean.resample("D").max()</code></p>
+
+<p>Below you resample the 2005 data subset that you created above, and 
+then you plot it. <a href="https://www.earthdatascience.org/courses/use-data-open-source-python/use-time-series-data-in-python/date-time-types-in-pandas-python/resample-time-series-data-pandas-python/">Resampling is discussed in more detail later in this 
+chapter.</a></p>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">precip_2005_daily</span> <span class="o">=</span> <span class="n">precip_2005_clean</span><span class="p">.</span><span class="n">resample</span><span class="p">(</span><span class="s">"D"</span><span class="p">).</span><span class="nb">sum</span><span class="p">()</span>
+<span class="c1"># Plot the data using native matplotlib
+</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">precip_2005_daily</span><span class="p">.</span><span class="n">index</span><span class="p">.</span><span class="n">values</span><span class="p">,</span>
+           <span class="n">y</span><span class="o">=</span><span class="n">precip_2005_daily</span><span class="p">[</span><span class="s">"HPCP"</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/01-time-series/plot-time-series-handle-dates/2019-11-19-time-series-01-get-started-with-time-series-python/2019-11-19-time-series-01-get-started-with-time-series-python_34_0.png" alt="Scatter plot of daily precipitation for Boulder Colorado in 2005." />
+<figcaption>Scatter plot of daily precipitation for Boulder Colorado in 2005.</figcaption>
+
+</figure>
+
+<div class="notice--warning alert alert-info">
+
+  <h2 id="challenge-2-plot-multiple-axes"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Challenge 2: Plot Multiple Axes</h2>
+
+  <p>If you recall from previous lessons, you can create a figure with
+multiple subplots using:</p>
+
+  <p><code class="highlighter-rouge">f, (ax1, ax2) = plot.subplots(2,1)</code></p>
+
+  <p>In the cell below, do the following</p>
+
+  <ol>
+    <li>Create a variable that contains precipitation data from 2012 and a second variable that contains data from 2013.</li>
+    <li>Plot each variable on a subplot within a matplotlib figure. The 2012 data
+should be on the top of your figure and the 2013 data should be on the bottom.</li>
+  </ol>
+
+  <p>Then answer the following questions:</p>
+
+  <ol>
+    <li>In which year 2012 or 2013 do you see the highest hourly precipitation value(s)?</li>
+    <li>What is the max hourly precipitation value for each year? HINT: <code class="highlighter-rouge">data-frame.max()</code>
+should help you answer this question.</li>
+  </ol>
+
+  <p>Customize your plots with x and y axis labels and titles.</p>
+</div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/01-time-series/plot-time-series-handle-dates/2019-11-19-time-series-01-get-started-with-time-series-python/2019-11-19-time-series-01-get-started-with-time-series-python_36_0.png" alt="Scatter plot of hourly precipitation for Boulder Colorado in 2012 and another plot with the data from 2013." />
+<figcaption>Scatter plot of hourly precipitation for Boulder Colorado in 2012 and another plot with the data from 2013.</figcaption>
+
+</figure>
+
+<div class="notice--warning alert alert-info">
+
+  <h2 id="challenge-3-modify-plot-x-and-y-limits"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Challenge 3: Modify Plot x and y Limits</h2>
+
+  <p>Have a look at the min and max values in your plots above. Do you notice 
+anything about the y-axis that may make the data look similar when in 
+reality one year has much higher values compared to the other?</p>
+
+  <p>Recreate the same plot that you made above. However, this time set the 
+y limits of each plot to span from 0 to 2.</p>
+
+  <p><code class="highlighter-rouge">ax1.set(ylim=[0, 2])</code></p>
+
+  <p>Customize your plot by changing the colors.</p>
+
+  <p>Add your plot code to the cell below.</p>
+</div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/01-time-series/plot-time-series-handle-dates/2019-11-19-time-series-01-get-started-with-time-series-python/2019-11-19-time-series-01-get-started-with-time-series-python_39_0.png" alt="Scatter plot of hourly precipitation for Boulder Colorado in 2012 and another plot with the data from 2013. The y axis limits have been modified so that both plots have the same height." />
+<figcaption>Scatter plot of hourly precipitation for Boulder Colorado in 2012 and another plot with the data from 2013. The y axis limits have been modified so that both plots have the same height.</figcaption>
+
+</figure>
+
+<div class="notice--warning alert alert-info">
+
+  <h2 id="challenge-4-data-subsets"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Challenge 4: Data Subsets</h2>
+
+  <p>Above you subset the data by year and plotted two years in the same figure.
+You can also create temporal subsets using dates to create subsets that 
+span across specific dates of the year - like this:</p>
+
+  <p><code class="highlighter-rouge">data_frame_name['2005-05-01':'2005-06-31']</code></p>
+
+  <p>In the cell below create a <strong>scatter plot</strong> of your precipitation data. 
+Subset the data to the date range September 1, 2013 (2013-09-01) to
+November 1, 2013 (2013-11-01).</p>
+
+</div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/01-time-series/plot-time-series-handle-dates/2019-11-19-time-series-01-get-started-with-time-series-python/2019-11-19-time-series-01-get-started-with-time-series-python_41_0.png" alt="Scatter plot of hourly precipitation for Boulder Colorado from January to July in 2005." />
+<figcaption>Scatter plot of hourly precipitation for Boulder Colorado from January to July in 2005.</figcaption>
+
+</figure>
+
+<div class="notice--warning alert alert-info">
+
+  <h2 id="bonus-challenge-formatting-dates-on-the-x-axis"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Bonus Challenge: Formatting Dates on the X-Axis</h2>
+
+  <p>You may have noticed the dates look a little messy on the x-axis. Remake the plot from above, but use <a href="https://www.earthdatascience.org/courses/use-data-open-source-python/use-time-series-data-in-python/date-time-types-in-pandas-python/customize-dates-matplotlib-plots-python/">this lesson</a> on customizing the format of time ticks on the x-axis of a plot to adjust the x-axis to be more legible.</p>
+
+</div>
+
+<div class="language-python input highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">matplotlib.dates</span> <span class="kn">import</span> <span class="n">DateFormatter</span>
+
+<span class="c1"># Place your code to plot your data here
+</span><span class="n">flood_data</span> <span class="o">=</span> <span class="n">boulder_precip_2003_2013</span><span class="p">[</span><span class="s">'2013-09-01'</span><span class="p">:</span><span class="s">'2013-11-01'</span><span class="p">]</span>
+
+<span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">flood_data</span><span class="p">.</span><span class="n">index</span><span class="p">.</span><span class="n">values</span><span class="p">,</span>
+           <span class="n">y</span><span class="o">=</span><span class="n">flood_data</span><span class="p">[</span><span class="s">"HPCP"</span><span class="p">])</span>
+
+<span class="c1"># Define the date format
+</span><span class="n">date_form</span> <span class="o">=</span> <span class="n">DateFormatter</span><span class="p">(</span><span class="s">"%m-%d"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">xaxis</span><span class="p">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">date_form</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s">"Optional Challenge </span><span class="se">\n</span><span class="s"> Precipitation Sept - Nov 2013 </span><span class="se">\n</span><span class="s"> Optional Plot with Dates Formatted Cleanly"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<figure class="output display_data">
+
+<img src="http://localhost:4000/images/courses/intermediate-eds-textbook/01-time-series/plot-time-series-handle-dates/2019-11-19-time-series-01-get-started-with-time-series-python/2019-11-19-time-series-01-get-started-with-time-series-python_43_0.png" alt="Scatter plot of hourly precipitation for Boulder Colorado from September to November in 2013. The dates on the x axis are now properly formatted so they are legible." />
+<figcaption>Scatter plot of hourly precipitation for Boulder Colorado from September to November in 2013. The dates on the x axis are now properly formatted so they are legible.</figcaption>
+
+</figure>
+
+<h2 id="summary">Summary</h2>
+
+<p>This lesson provides a high level overview of working with dates using 
+Pandas in Python. The rest of this chapter will dive into more detail
+surrounding working with dates, subsettings and also customizing date time
+labels on plots.</p>
+
+          
+
+        
+
+        <!-- if the page is a course lesson, add pagination -->
+
+        
+         <!-- This is clunky code that forces pagination across lesson sets -->
+<!-- NOTE: it won't include slideshows as written which makes sense -->
+<!-- add forced pagination -->
+<!-- first, get total lesson count -->
+
+<div class="previous--next">
+
+
+
+
+
+<!-- if it's page one - then no previous button -->
+<!-- how do i figure out the link? i have to loop through again? -->
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+       <a href="http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/date-time-types-in-pandas-python/" class="btn btn--info btn--large btn-success" style="float:right" >
+         Dates in Python
+         <i class="fa fa-4 fa-arrow-circle-right" aria-hidden="true"></i></a>
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+
+    
+      
+
+      
+      
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+    
+  
+  <!-- ELSE if it's a module -->
+  
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+
+  <!-- ELSE if it's a module -->
+  
+      
+    
+
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags
+  
+  <span class="a-main-tag">
+  <i class="fa fa-fw fa-tag" aria-hidden="true"></i><a href=http://localhost:4000/tags/reproducible-science-and-programming/>Reproducible science and programming</a>:
+  </span>
+  
+    
+    <a href=http://localhost:4000/tags/reproducible-science-and-programming/jupyter-notebook/>jupyter notebook</a> 
+    
+    , 
+  
+    
+    <a href=http://localhost:4000/tags/reproducible-science-and-programming/python/>python</a> 
+    
+    
+  
+
+  <span class="a-main-tag">
+  <i class="fa fa-fw fa-tag" aria-hidden="true"></i><a href=http://localhost:4000/tags/time-series/>Time series</a>:
+  </span>
+  
+
+  <span class="a-main-tag">
+  <i class="fa fa-fw fa-tag" aria-hidden="true"></i><a href=http://localhost:4000/tags/data-exploration-and-analysis/>Data exploration and analysis</a>:
+  </span>
+  
+    
+    <a href=http://localhost:4000/tags/data-exploration-and-analysis/data-visualization/>data visualization</a> 
+    
+    
+  
+
+
+
+
+
+
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-09-11">September 11, 2020</time></p>
+        
+        <!-- Add license information w/ DOI to the bottom -->
+        
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+      </footer>
+
+      
+
+
+<section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/introduction-to-time-series-in-pandas-python/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/introduction-to-time-series-in-pandas-python/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/introduction-to-time-series-in-pandas-python/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/courses/use-data-open-source-python/use-time-series-data-in-python/introduction-to-time-series-in-pandas-python/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+<br><br>
+  <a href="http://bit.ly/2jc5SXy" target="_blank">
+    <img src="http://localhost:4000/images/earth-data-analytics-professional-certificate-banner.png" alt="Get a professional Certificate in Earth Data Analytics at University of Colorado, Boulder" width="40%"></a>
+</section>
+
+
+       
+    </div>
+
+    
+      
+
+
+<div class="page__comments">
+  <h4 class="page__comments-title">Leave a Comment</h4>
+  
+    <section id="disqus_thread"></section>
+  
+</div>
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      
+        <h4 class="page__related-title">You May Also Enjoy</h4>
+      
+      <div class="grid__wrapper">
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/earth-analytics-bootcamp/plot-data-python">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">Plot Data With Matplotlib
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  1 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">
+
+     This Week
+
+  
+
+
+</p>
+    </article>
+  </a>
+</div>
+
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/summarize-climate-data-by-season/">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">Calculate Seasonal Summary Values from Climate Data Variables Stored in NetCDF 4 Format: Work With MACA v2 Climate Data in Python
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  25 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">Learn how to calculate seasonal summary values for MACA 2 climate data using xarray and region mask in open source Python.
+</p>
+    </article>
+  </a>
+</div>
+
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/subset-netcdf4-climate-data-spatially-aoi/">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">Calculate Summary Values Using Spatial Areas of Interest (AOIs) including Shapefiles for Climate Data Variables Stored in NetCDF 4 Format: Work With MACA v2 Climate Data in Python
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  33 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">Climate datasets stored in netcdf 4 format often cover the entire globe or an entire country. Learn how to subset climate data spatially and by time slices u...</p>
+    </article>
+  </a>
+</div>
+
+        
+          
+
+
+
+
+<div class="grid__item">
+  
+    <a href="http://localhost:4000/courses/use-data-open-source-python/hierarchical-data-formats-hdf/use-netcdf-in-python-xarray/">
+  
+    <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+      
+      <h2 class="archive__item-title" itemprop="headline">How to Open and Process NetCDF 4 Data Format in Open Source Python
+</h2>
+
+
+     
+      
+        <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  26 minute read
+	
+</p>
+      
+      <p class="archive__item-excerpt" itemprop="description">Historic and projected climate data are most often stored in netcdf 4 format. Learn how to open and process MACA version 2 climate data for the Continental U...</p>
+    </article>
+  </a>
+</div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+
+
+<!-- Adding analytics code -->
+
+        
+
+
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    <li>
+      <strong>&copy; 2021 Earth Lab -
+      <a href="http://localhost:4000/license"> All materials on this site
+        are subject to the CC BY-NC-ND 4.0 License. </a>
+      </strong>
+    </li>
+  </ul>
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/earthlabcu"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+    
+      <li><a href="http://github.com/earthlab"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<!--
+<div class="page__footer-copyright">Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+-->
+
+      </footer>
+    </div>
+
+    <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+
+
+
+  
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'earthlabcu';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+<script type="text/javascript"
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-84081999-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+
+  </body>
+</html>
+

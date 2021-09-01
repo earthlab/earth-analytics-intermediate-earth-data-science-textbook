@@ -1,6 +1,6 @@
 # JOSE Paper - Intermediate EDS Textbook
 
-title: 'Data Science for Earth and Environmental Data - The Intermediate Earth Analytics Online Textbook'
+title: 'Open and Reproducible Data Science for Earth and Environmental Data: The Intermediate Earth Analytics Online Textbook'
 tags:
   - Python
   - data science
@@ -11,29 +11,31 @@ tags:
 authors:
   - name: Leah A. Wasser
     orcid: 0000-0002-8177-6550
-    affiliation: "1, 2" 
+    affiliation: "1, 2, 3" 
   - name: Jenny Palomino
     orcid: 0000-0003-4879-9299
-    affiliation: "3"
+    affiliation: "4"
   - name: Nathan Korinek
     orcid: 0000-0002-8177-6550
-    affiliation: "1"
+    affiliation: "1, 2" 
   - name: Martha Morrisey 
-    affiliation: "5"
+    affiliation: "6"
   - name: Chris Holdgraf
     orcid: 0000-0002-2391-0678
-    affiliation: "4"
+    affiliation: "5"
 affiliations:
  - name: Earth Lab, University of Colorado - Boulder
    index: 1
- - name: pyOpenSci
+ - name: CIRES, University of Colorado - Boulder
    index: 2
- - name: Google
+ - name: pyOpenSci
    index: 3
- - name: 2i2c
+ - name: Google
    index: 4
- - name: Development Seed
+ - name: 2i2c
    index: 5
+ - name: Development Seed
+   index: 6
 date: 20 August 2021
 bibliography: paper.bib
 ---

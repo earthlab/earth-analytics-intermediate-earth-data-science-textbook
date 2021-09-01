@@ -1,6 +1,3 @@
-# Paper.bib
-
-
 @software{leah_wasser_2021_4657501,
   author       = {Leah Wasser and
                   Max Joseph and

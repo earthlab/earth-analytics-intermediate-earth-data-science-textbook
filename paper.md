@@ -1,5 +1,3 @@
-# JOSE Paper - Intermediate EDS Textbook
-
 title: 'Open and Reproducible Data Science for Earth and Environmental Data: The Intermediate Earth Analytics Online Textbook'
 tags:
   - Python
@@ -36,7 +34,7 @@ affiliations:
    index: 5
  - name: Development Seed
    index: 6
-date: 20 August 2021
+date: 1 September 2021
 bibliography: paper.bib
 ---
 

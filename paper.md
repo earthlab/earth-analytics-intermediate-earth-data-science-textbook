@@ -1,3 +1,5 @@
+
+---
 title: 'Open and Reproducible Data Science for Earth and Environmental Data: The Intermediate Earth Analytics Online Textbook'
 tags:
   - Python

@@ -1,8 +1,4 @@
----
-tags: JOSE
----
-
-# JOSE Intermediate Textbook - Paper.bib
+# Paper.bib
 
 
 @software{leah_wasser_2021_4657501,

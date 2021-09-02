@@ -11,7 +11,7 @@ textbook for the [Earth Analytics Python course](https://www.earthdatascience.or
 
 As of August 2021, the earthdatascience.org learning portal is currently growing
 and serves over 200,000 unique global users a month. It has served over 5 million
-unique users since its launch in 2018. The textbook has been vetted by over XX
+unique users since its launch in 2018. The textbook has been vetted by over 100
 students who who have participated in our courses, workshops and trainings.
 
 ## Repository Structure

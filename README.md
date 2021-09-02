@@ -19,7 +19,7 @@ students who who have participated in our courses, workshops and trainings.
 The repo is structured as follows:
 
 * `_posts/courses/intermediate-eds-textbook`: This directory contains the markdown files needed to build the web pages hosted on earthdatascience.org using Jekyll & GitHub Pages
-* `_site/courses/use-data-open-source-python/images`: This  directory contains images needed to build the lessons.
+* `_site/courses/use-data-open-source-python/images`: This directory contains images needed to build the lessons.
 
 Lessons found in this repository are compiled and tested using a continuous
 integration build that uses the Earth Lab [docker environment](https://github.com/earthlab/r-python-eds-lessons-env).

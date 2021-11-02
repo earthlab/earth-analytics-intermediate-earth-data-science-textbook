@@ -150,7 +150,7 @@ The spectral resolution of a dataset that has more than one band, refers to the
 spectral width of each band in the dataset. In the image above, a band was
 defined as spanning 800-810 nm. The spectral width or spectral resolution of the
 band is thus 10 nm. To see an example of this, check out the band widths
-for the <a href="http://landsat.usgs.gov/band_designations_landsat_satellites.php" target="_blank">Landsat sensors</a>.
+for the <a href="https://www.usgs.gov/faqs/what-are-band-designations-landsat-satellites" target="_blank">Landsat sensors</a>.
 
 While a general spectral resolution of the sensor is often provided, not all
 sensors collect information within bands of uniform widths.
